@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="My Plan">
+<title>Manoj's 6-Month Plan</title>
+<style>
+  :root {
+    --bg: #0f0f0f; --surface: #1a1a1a; --surface2: #242424;
+    --border: rgba(255,255,255,0.08); --text: #f0f0f0; --muted: #888;
+    --accent: #4f8ef7; --green: #4caf7d; --amber: #f5a623; --coral: #e8624a; --purple: #9b7fe8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-size: 15px; padding-bottom: 80px; }
+  .header { padding: 52px 20px 16px; background: var(--surface); border-bottom: 0.5px solid var(--border); }
+  .header h1 { font-size: 22px; font-weight: 700; }
+  .header p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+  .tabbar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 0.5px solid var(--border); display: flex; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+  .tabitem { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 4px 6px; font-size: 10px; color: var(--muted); cursor: pointer; gap: 4px; }
+  .tabitem.active { color: var(--accent); }
+  .tabitem svg { width: 22px; height: 22px; }
+  .panel { display: none; padding: 16px 16px 0; }
+  .panel.active { display: block; }
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .metric { background: var(--surface); border: 0.5px solid var(--border); border-radius: 14px; padding: 14px; }
+  .metric-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .metric-value { font-size: 22px; font-weight: 600; }
+  .metric-unit { font-size: 12px; color: var(--muted); font-weight: 400; }
+  .sec { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; color: var(--muted); text-transform: uppercase; margin: 20px 0 10px; }
+  .acc { background: var(--surface); border: 0.5px solid var(--border); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
+  .acc-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; cursor: pointer; }
+  .acc-header:active { background: var(--surface2); }
+  .acc-title { font-size: 15px; font-weight: 600; }
+  .acc-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .acc-body { display: none; border-top: 0.5px solid var(--border); }
+  .acc-body.open { display: block; }
+  .chevron { transition: transform 0.2s; color: var(--muted); flex-shrink: 0; margin-left: 8px; width: 18px; height: 18px; min-width: 18px; }
+  .acc-header.open .chevron { transform: rotate(180deg); }
+  .ex-header { display: grid; grid-template-columns: 1fr 44px 64px 54px; gap: 6px; padding: 10px 16px 6px; }
+  .ex-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ex-row { display: grid; grid-template-columns: 1fr 44px 64px 54px; gap: 6px; padding: 10px 16px; border-top: 0.5px solid var(--border); align-items: center; }
+  .ex-name { font-size: 14px; font-weight: 500; }
+  .ex-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .ex-val { font-size: 14px; }
+  .meal-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 16px; border-top: 0.5px solid var(--border); gap: 8px; }
+  .meal-name { font-size: 14px; font-weight: 500; }
+  .meal-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .meal-kcal { font-size: 13px; color: var(--muted); white-space: nowrap; padding-top: 2px; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+  .b-blue { background: rgba(79,142,247,0.15); color: var(--accent); }
+  .b-green { background: rgba(76,175,125,0.15); color: var(--green); }
+  .b-amber { background: rgba(245,166,35,0.15); color: var(--amber); }
+  .b-coral { background: rgba(232,98,74,0.15); color: var(--coral); }
+  .macro-row { margin-bottom: 12px; }
+  .macro-top { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
+  .macro-track { background: var(--surface2); border-radius: 4px; height: 6px; overflow: hidden; }
+  .macro-fill { height: 100%; border-radius: 4px; }
+  .info-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
+  .info-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .info-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .tip { background: var(--surface2); border-radius: 10px; padding: 10px 14px; margin: 6px 16px 14px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .tl-item { display: flex; gap: 14px; margin-bottom: 18px; }
+  .tl-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .tl-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .tl-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .supp-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
+  .supp-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .supp-name { font-size: 15px; font-weight: 600; }
+  .supp-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .tag-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  b { color: var(--text); font-weight: 600; }
+  .warmup { font-size: 12px; color: var(--muted); padding: 10px 16px; font-style: italic; }
+  .phase-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
+  .phase-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .phase-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>💪 Manoj's 6-Month Plan</h1>
+  <p>28M · 5'7" · 66kg · ~21% BF · Lean Bulk · Eggetarian</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ OVERVIEW -->
+<div id="panel-overview" class="panel active">
+  <div class="sec" style="margin-top:16px;">Daily targets</div>
+  <div class="metric-grid">
+    <div class="metric"><div class="metric-label">Maintenance</div><div class="metric-value">2,380<span class="metric-unit"> kcal</span></div></div>
+    <div class="metric"><div class="metric-label">Lean bulk target</div><div class="metric-value">2,680<span class="metric-unit"> kcal</span></div></div>
+    <div class="metric"><div class="metric-label">Surplus</div><div class="metric-value">+300<span class="metric-unit"> kcal</span></div></div>
+    <div class="metric"><div class="metric-label">Protein target</div><div class="metric-value">165<span class="metric-unit"> g/day</span></div></div>
+  </div>
+
+  <div class="sec">Macro split</div>
+  <div class="info-card">
+    <div class="macro-row">
+      <div class="macro-top"><span>Protein — 165g · 660 kcal</span><span style="color:var(--accent)">25%</span></div>
+      <div class="macro-track"><div class="macro-fill" style="width:25%;background:var(--accent)"></div></div>
+    </div>
+    <div class="macro-row">
+      <div class="macro-top"><span>Carbohydrates — 335g · 1,340 kcal</span><span style="color:var(--green)">50%</span></div>
+      <div class="macro-track"><div class="macro-fill" style="width:50%;background:var(--green)"></div></div>
+    </div>
+    <div class="macro-row" style="margin-bottom:0">
+      <div class="macro-top"><span>Fats — 75g · 675 kcal</span><span style="color:var(--amber)">25%</span></div>
+      <div class="macro-track"><div class="macro-fill" style="width:25%;background:var(--amber)"></div></div>
+    </div>
+  </div>
+
+  <div class="sec">Calculation reasoning</div>
+  <div class="info-card">
+    <div class="info-body">
+      <b>BMR (Mifflin-St Jeor):</b> 1,668 kcal · Activity multiplier 1.375 (sedentary desk job + 4× gym) = <b>2,380 kcal maintenance.</b><br><br>
+      A conservative <b>+300 kcal surplus</b> is chosen (not +500) because at 21% BF, aggressive surpluses add more fat than muscle. Lean bulk keeps fat gain minimal while still supporting muscle growth.<br><br>
+      <b>Protein at 2.5g/kg</b> (165g) — top of the evidence-based range, optimised for hypertrophy. Carbs are maximised to fuel training and recovery. Fats kept at a healthy minimum floor.
+    </div>
+  </div>
+
+  <div class="sec">Weekly schedule</div>
+  <div class="metric-grid">
+    <div class="metric"><div class="metric-label">Monday</div><div style="font-size:15px;font-weight:600;margin-top:4px;">Upper A</div><div style="font-size:11px;color:var(--muted)">Strength focus</div></div>
+    <div class="metric"><div class="metric-label">Tuesday</div><div style="font-size:15px;font-weight:600;margin-top:4px;">Lower A</div><div style="font-size:11px;color:var(--muted)">Squat focus</div></div>
+    <div class="metric"><div class="metric-label">Wednesday</div><div style="font-size:15px;font-weight:600;margin-top:4px;">Rest</div><div style="font-size:11px;color:var(--muted)">Walk / stretch</div></div>
+    <div class="metric"><div class="metric-label">Thursday</div><div style="font-size:15px;font-weight:600;margin-top:4px;">Upper B</div><div style="font-size:11px;color:var(--muted)">Volume focus</div></div>
+    <div class="metric"><div class="metric-label">Friday</div><div style="font-size:15px;font-weight:600;margin-top:4px;">Lower B</div><div style="font-size:11px;color:var(--muted)">Hinge focus</div></div>
+    <div class="metric"><div class="metric-label">Sat–Sun</div><div style="font-size:15px;font-weight:600;margin-top:4px;">Rest</div><div style="font-size:11px;color:var(--muted)">Full recovery</div></div>
+  </div>
+
+  <div class="sec">Key constraints factored in</div>
+  <div class="tag-wrap">
+    <span class="badge b-blue">4 days/week max</span>
+    <span class="badge b-blue">60 min sessions</span>
+    <span class="badge b-green">Full commercial gym</span>
+    <span class="badge b-amber">Low diet discipline → simple meal plan</span>
+    <span class="badge b-amber">Eggetarian → eggs + dairy + whey</span>
+    <span class="badge b-coral">21% BF → lean bulk, not aggressive</span>
+    <span class="badge b-coral">Desk job → low NEAT, adjusted multiplier</span>
+  </div>
+
+  <div class="sec">Non-negotiable rules</div>
+  <div class="info-card">
+    <div class="info-body">
+      1. <b>Hit 165g protein daily</b> — if a meal is off, have a whey shake.<br>
+      2. <b>Creatine 5g every single day</b> — doesn't matter when.<br>
+      3. <b>Sleep 7.5 hrs</b> — you grow during sleep, not during training.<br>
+      4. <b>3–4L water daily</b> — muscle is 75% water.<br>
+      5. <b>Never restart on Monday</b> — miss a session? Do it the next day.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ TRAINING -->
+<div id="panel-training" class="panel">
+
+  <div class="sec" style="margin-top:16px;">Why Upper / Lower split?</div>
+  <div class="info-card">
+    <div class="info-body">At intermediate level, a 4-day Upper/Lower gives each muscle group <b>2× per week frequency</b> — the sweet spot for hypertrophy — while fitting 60-min sessions. Push/Pull/Legs would need 5–6 days to match frequency. Upper/Lower is the optimal choice for your constraints.</div>
+  </div>
+
+  <!-- ── DAY 1 ── -->
+  <div class="sec">Monday — Upper A · Strength focus</div>
+  <div class="acc">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div><div class="acc-title">Warm-up</div><div class="acc-sub">Do this every upper session</div></div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body">
+      <div class="warmup">5 min treadmill (brisk walk) → shoulder circles ×10 each direction → band pull-aparts ×15 → arm swings ×10</div>
+    </div>
+  </div>
+  <div class="acc">
+    <div class="acc-header open" onclick="toggleAcc(this)">
+      <div><div class="acc-title">Exercises</div><div class="acc-sub">6 movements · ~55 min</div></div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body open">
+      <div class="ex-header"><div class="ex-label">Exercise</div><div class="ex-label">Sets</div><div class="ex-label">Reps</div><div class="ex-label">Rest</div></div>
+      <div class="ex-row"><div><div class="ex-name">Barbell bench press</div><div class="ex-note">Main compound · progressive overload</div></div><div class="ex-val">4</div><div class="ex-val">6–8</div><div class="ex-val" style="font-size:12px">2–3 min</div></div>
+      <div class="ex-row"><div><div class="ex-name">Barbell row (overhand)</div><div class="ex-note">Back thickness · pair with bench</div></div><div class="ex-val">4</div><div class="ex-val">6–8</div><div class="ex-val" style="font-size:12px">2–3 min</div></div>
+      <div class="ex-row"><div><div class="ex-name">Overhead press (barbell)</div><div class="ex-note">Shoulders + triceps</div></div><div class="ex-val">3</div><div class="ex-val">8–10</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Weighted pull-up / Lat pulldown</div><div class="ex-note">Lat width</div></div><div class="ex-val">3</div><div class="ex-val">8–10</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Incline dumbbell curl</div><div class="ex-note">Bicep peak</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Tricep pushdown (cable)</div><div class="ex-note">Tricep isolation</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
+      <div class="tip">Add 2.5kg to bench/OHP when you hit the top of the rep range for all sets, 2 weeks in a row.</div>
+    </div>
+  </div>
+
+  <!-- ── DAY 2 ── -->
+  <div class="sec">Tuesday — Lower A · Squat focus</div>
+  <div class="acc">
+    <div class="acc-header open" onclick="toggleAcc(this)">
+      <div><div class="acc-title">Exercises</div><div class="acc-sub">6 movements · ~55 min</div></div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body open">
+      <div class="warmup">Leg swings ×10 → goblet squat ×10 → hip circles ×10 each direction</div>
+      <div class="ex-header"><div class="ex-label">Exercise</div><div class="ex-label">Sets</div><div class="ex-label">Reps</div><div class="ex-label">Rest</div></div>
+      <div class="ex-row"><div><div class="ex-name">Barbell back squat</div><div class="ex-note">Primary compound · quads + glutes</div></div><div class="ex-val">4</div><div class="ex-val">6–8</div><div class="ex-val" style="font-size:12px">2–3 min</div></div>
+      <div class="ex-row"><div><div class="ex-name">Romanian deadlift</div><div class="ex-note">Hamstring + glute hinge</div></div><div class="ex-val">3</div><div class="ex-val">8–10</div><div class="ex-val" style="font-size:12px">2 min</div></div>
+      <div class="ex-row"><div><div class="ex-name">Leg press</div><div class="ex-note">Volume quad work</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Leg curl (machine)</div><div class="ex-note">Hamstring isolation</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Standing calf raise</div><div class="ex-note">Gastroc development</div></div><div class="ex-val">4</div><div class="ex-val">12–15</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Ab wheel rollout / Plank</div><div class="ex-note">Core stability</div></div><div class="ex-val">3</div><div class="ex-val">10 / 30s</div><div class="ex-val" style="font-size:12px">45 sec</div></div>
+    </div>
+  </div>
+
+  <!-- ── DAY 3 ── -->
+  <div class="sec">Thursday — Upper B · Volume focus</div>
+  <div class="acc">
+    <div class="acc-header open" onclick="toggleAcc(this)">
+      <div><div class="acc-title">Exercises</div><div class="acc-sub">6 movements · ~55 min</div></div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body open">
+      <div class="warmup">Arm circles ×10 → band pull-aparts ×15 → face pulls ×15 (light)</div>
+      <div class="ex-header"><div class="ex-label">Exercise</div><div class="ex-label">Sets</div><div class="ex-label">Reps</div><div class="ex-label">Rest</div></div>
+      <div class="ex-row"><div><div class="ex-name">Incline barbell press</div><div class="ex-note">Upper chest emphasis</div></div><div class="ex-val">4</div><div class="ex-val">8–10</div><div class="ex-val" style="font-size:12px">2 min</div></div>
+      <div class="ex-row"><div><div class="ex-name">Cable row (seated, wide grip)</div><div class="ex-note">Back width + thickness</div></div><div class="ex-val">4</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Dumbbell shoulder press</div><div class="ex-note">Shoulder mass</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Cable fly (low to high)</div><div class="ex-note">Chest stretch + squeeze</div></div><div class="ex-val">3</div><div class="ex-val">12–15</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Face pulls (cable)</div><div class="ex-note">Rear delt + rotator cuff health</div></div><div class="ex-val">3</div><div class="ex-val">15–20</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Hammer curl + skull crusher superset</div><div class="ex-note">Brachialis + tricep long head</div></div><div class="ex-val">3</div><div class="ex-val">10–12 ea</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
+    </div>
+  </div>
+
+  <!-- ── DAY 4 ── -->
+  <div class="sec">Friday — Lower B · Hinge focus</div>
+  <div class="acc">
+    <div class="acc-header open" onclick="toggleAcc(this)">
+      <div><div class="acc-title">Exercises</div><div class="acc-sub">6 movements · ~55 min</div></div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body open">
+      <div class="warmup">Cat-cow ×10 → bird dog ×10/side → glute bridges ×15</div>
+      <div class="ex-header"><div class="ex-label">Exercise</div><div class="ex-label">Sets</div><div class="ex-label">Reps</div><div class="ex-label">Rest</div></div>
+      <div class="ex-row"><div><div class="ex-name">Conventional deadlift</div><div class="ex-note">Full posterior chain · primary compound</div></div><div class="ex-val">4</div><div class="ex-val">5–6</div><div class="ex-val" style="font-size:12px">3 min</div></div>
+      <div class="ex-row"><div><div class="ex-name">Bulgarian split squat</div><div class="ex-note">Unilateral quad + glute</div></div><div class="ex-val">3</div><div class="ex-val">8–10/L</div><div class="ex-val" style="font-size:12px">2 min</div></div>
+      <div class="ex-row"><div><div class="ex-name">Leg extension (machine)</div><div class="ex-note">Quad isolation</div></div><div class="ex-val">3</div><div class="ex-val">12–15</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Hip thrust (barbell)</div><div class="ex-note">Glute mass builder</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Seated calf raise</div><div class="ex-note">Soleus focus</div></div><div class="ex-val">4</div><div class="ex-val">12–15</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
+      <div class="ex-row"><div><div class="ex-name">Hanging leg raise</div><div class="ex-note">Lower abs</div></div><div class="ex-val">3</div><div class="ex-val">10–15</div><div class="ex-val" style="font-size:12px">45 sec</div></div>
+      <div class="tip">Add 5kg to deadlift when you hit 6 clean reps across all sets for 2 consecutive weeks.</div>
+    </div>
+  </div>
+
+  <!-- ── PROGRESSION ── -->
+  <div class="sec">6-month progression strategy</div>
+  <div class="phase-card">
+    <div class="phase-title" style="color:var(--accent)">Phase 1 — Months 1–2: Foundation</div>
+    <div class="phase-body">Learn movement patterns, build work capacity. Use <b>double progression</b> — stay in rep range, add weight only when top of range is hit for all sets 2 weeks running. No ego lifting.</div>
+  </div>
+  <div class="phase-card">
+    <div class="phase-title" style="color:var(--amber)">Phase 2 — Months 3–4: Accumulation</div>
+    <div class="phase-body">Add 1 set per compound movement. Introduce <b>weekly top sets</b> — work up to a heavy 3–5 rep set before your normal back-off sets. Strength and size accelerate here.</div>
+  </div>
+  <div class="phase-card">
+    <div class="phase-title" style="color:var(--coral)">Phase 3 — Months 5–6: Intensification</div>
+    <div class="phase-body">Insert a <b>deload week every 4th week</b> (drop to 50% volume, same movements). Focus on rep PRs and full ROM. This is when the physique really consolidates. Reassess after month 6.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ NUTRITION -->
+<div id="panel-nutrition" class="panel">
+  <div class="sec" style="margin-top:16px;">Daily meal plan · 2,680 kcal · 165g protein</div>
+  <div class="info-card" style="margin-bottom:14px;">
+    <div class="info-body">Designed for <b>low discipline</b> — same meals daily, simple swaps. 4 meals, no complicated cooking. The goal is systematic protein hitting, not variety.</div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-header open" onclick="toggleAcc(this)">
+      <div><div class="acc-title">Meal 1 — Breakfast</div><div class="acc-sub">7–8 AM · ~600 kcal · 40g protein</div></div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body open">
+      <div class="meal-row"><div><div class="meal-name">4 whole eggs + 4 egg whites (scrambled)</div><div class="meal-note">40g protein · healthy fats</div></div><div class="meal-kcal">280 kcal</div></div>
+      <div class="meal-row"><div><div class="meal-name">2 multigrain bread + peanut butter</div><div class="meal-note">Carbs + healthy fats</div></div><div class="meal-kcal">220 kcal</div></div>
+      <div class="meal-row"><div><div class="meal-name">1 banana</div><div class="meal-note">Fast carbs + potassium</div></div><div class="meal-kcal">100 kcal</div></div>
+      <div class="tip"><b>No time swap:</b> 2 scoops whey in milk + 1 banana. Same protein, 3 minutes prep.</div>
+    </div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-header open" onclick="toggleAcc(this)">
+      <div><div class="acc-title">Meal 2 — Lunch (pre-workout)</div><div class="acc-sub">12–1 PM · ~750 kcal · 45g protein</div></div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body open">
+      <div class="meal-row"><div><div class="meal-name">200g paneer (bhurji / stir-fry)</div><div class="meal-note">Primary protein source</div></div><div class="meal-kcal">360 kcal</div></div>
+      <div class="meal-row"><div><div class="meal-name">1.5 cups cooked rice or 3 rotis</div><div class="meal-note">Carbs for training fuel</div></div><div class="meal-kcal">300 kcal</div></div>
+      <div class="meal-row"><div><div class="meal-name">Mixed sabzi / dal (1 bowl)</div><div class="meal-note">Micronutrients + fibre</div></div><div class="meal-kcal">90 kcal</div></div>
+      <div class="tip"><b>Swap paneer with:</b> 250g tofu (fewer calories, similar protein) · or 3 boiled eggs + 100g curd.</div>
+    </div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-header open" onclick="toggleAcc(this)">
+      <div><div class="acc-title">Meal 3 — Post-workout shake</div><div class="acc-sub">4–5 PM · ~450 kcal · 45g protein</div></div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body open">
+      <div class="meal-row"><div><div class="meal-name">2 scoops whey in 300ml milk</div><div class="meal-note">40–45g protein · fast absorption post-workout</div></div><div class="meal-kcal">280 kcal</div></div>
+      <div class="meal-row"><div><div class="meal-name">1 banana + handful of oats</div><div class="meal-note">Glycogen replenishment</div></div><div class="meal-kcal">170 kcal</div></div>
+      <div class="tip"><b>Rest days:</b> 1 scoop only, skip the oats. Carbs can be 10–15% lower on non-training days.</div>
+    </div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-header open" onclick="toggleAcc(this)">
+      <div><div class="acc-title">Meal 4 — Dinner</div><div class="acc-sub">8–9 PM · ~880 kcal · 35g protein</div></div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body open">
+      <div class="meal-row"><div><div class="meal-name">200g Greek yogurt / curd</div><div class="meal-note">Slow casein-like protein — great before sleep</div></div><div class="meal-kcal">120 kcal</div></div>
+      <div class="meal-row"><div><div class="meal-name">1.5 cups rajma / chana / dal</div><div class="meal-note">Protein + carbs + fibre</div></div><div class="meal-kcal">230 kcal</div></div>
+      <div class="meal-row"><div><div class="meal-name">2 rotis or 1 cup rice</div><div class="meal-note">Carbs</div></div><div class="meal-kcal">200 kcal</div></div>
+      <div class="meal-row"><div><div class="meal-name">Cooked vegetables (any)</div><div class="meal-note">Fibre + micronutrients</div></div><div class="meal-kcal">80 kcal</div></div>
+      <div class="meal-row"><div><div class="meal-name">2 tbsp ghee across the day</div><div class="meal-note">Healthy fats · hormone support</div></div><div class="meal-kcal">250 kcal</div></div>
+    </div>
+  </div>
+
+  <div class="sec">Daily totals</div>
+  <div class="metric-grid">
+    <div class="metric"><div class="metric-label">Calories</div><div class="metric-value">2,680</div></div>
+    <div class="metric"><div class="metric-label">Protein</div><div class="metric-value">165<span class="metric-unit"> g</span></div></div>
+    <div class="metric"><div class="metric-label">Carbs</div><div class="metric-value">335<span class="metric-unit"> g</span></div></div>
+    <div class="metric"><div class="metric-label">Fats</div><div class="metric-value">75<span class="metric-unit"> g</span></div></div>
+  </div>
+
+  <div class="sec">Practical rules (low discipline edition)</div>
+  <div class="info-card">
+    <div class="info-body">
+      1. <b>Never skip protein</b> — if a meal is off, at minimum have a whey shake.<br>
+      2. <b>Eat the same meals daily</b> — reduce decision fatigue. Variety comes from spices, not different foods.<br>
+      3. <b>Prep paneer and dal in bulk on Sunday</b> — 2 days of meals ready instantly.<br>
+      4. <b>Keep boiled eggs in the fridge</b> — fastest protein top-up available.<br>
+      5. <b>Buy Greek yogurt in large tubs</b> — cheaper and you won't run out mid-week.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SUPPLEMENTS -->
+<div id="panel-supps" class="panel">
+  <div class="sec" style="margin-top:16px;">Daily supplement stack</div>
+
+  <div class="supp-card" style="border: 1.5px solid var(--accent)">
+    <div class="supp-top"><div class="supp-name">Creatine monohydrate</div><span class="badge b-blue">Must-have #1</span></div>
+    <div class="supp-body">
+      <b>5g daily</b>, any time, with water. No loading phase needed.<br>
+      The most researched supplement in existence. Increases phosphocreatine stores → more reps → more strength → more muscle. You'll notice fuller muscles and better performance within 2–3 weeks.<br>
+      <b>Brands:</b> AS-IT-IS, MuscleBlaze · <b>Cost:</b> ~₹600–800/month
+    </div>
+  </div>
+
+  <div class="supp-card">
+    <div class="supp-top"><div class="supp-name">Whey protein</div><span class="badge b-green">Already using ✓</span></div>
+    <div class="supp-body">
+      <b>2 scoops post-workout</b> in milk. Ensure ~24–26g protein per scoop.<br>
+      Avoid mass gainers — too much sugar, not enough protein density per calorie.<br>
+      <b>Recommended:</b> MuscleBlaze Biozyme, Optimum Nutrition Gold Standard
+    </div>
+  </div>
+
+  <div class="supp-card">
+    <div class="supp-top"><div class="supp-name">Vitamin D3 + K2</div><span class="badge b-amber">Strongly recommended</span></div>
+    <div class="supp-body">
+      Bangalore is a high-altitude city but most desk workers are chronically D3-deficient. D3 is critical for testosterone, bone health, immune function, and muscle recovery. K2 ensures calcium goes to bones, not arteries.<br>
+      <b>Dose:</b> 2,000–4,000 IU D3 + 100mcg K2 daily · <b>Cost:</b> ~₹300–400/month
+    </div>
+  </div>
+
+  <div class="supp-card">
+    <div class="supp-top"><div class="supp-name">Magnesium glycinate</div><span class="badge b-amber">Recommended</span></div>
+    <div class="supp-body">
+      You sleep 6–7 hrs with moderate stress. Magnesium improves sleep depth and quality — directly improving recovery, testosterone, and muscle growth.<br>
+      <b>Dose:</b> 300–400mg before bed · <b>Cost:</b> ~₹400–500/month<br>
+      Avoid magnesium oxide — poor absorption. Glycinate or bisglycinate only.
+    </div>
+  </div>
+
+  <div class="supp-card">
+    <div class="supp-top"><div class="supp-name">Omega-3 (fish oil)</div><span class="badge b-amber">Recommended</span></div>
+    <div class="supp-body">
+      Reduces systemic inflammation, improves joint health, and supports muscle protein synthesis — especially valuable as training volume increases over months 3–6.<br>
+      <b>Dose:</b> 2–3g EPA+DHA daily · <b>Cost:</b> ~₹500–700/month<br>
+      <b>Brands:</b> NOW Foods, HealthKart Omega-3
+    </div>
+  </div>
+
+  <div class="info-card" style="background:var(--surface2)">
+    <div class="info-title">Total monthly add-on cost</div>
+    <div class="info-body">Creatine + D3K2 + Magnesium + Omega-3 ≈ <b>₹1,800–2,400/month</b><br><span style="color:var(--muted);font-size:12px">(Excluding whey protein which you already buy)</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ TIMELINE -->
+<div id="panel-timeline" class="panel">
+  <div class="sec" style="margin-top:16px;">What to expect, month by month</div>
+
+  <div class="tl-item">
+    <div class="tl-dot" style="background:var(--accent)"></div>
+    <div>
+      <div class="tl-title">Month 1 — Foundation</div>
+      <div class="tl-body">Neural adaptation phase — strength jumps fast, not much visible size change yet. Expect +5–10% strength on main lifts. Weight may go up 0.5–1kg (partly water from creatine). Focus: nail the movements, get consistent. Some people feel and look tighter already.</div>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot" style="background:var(--green)"></div>
+    <div>
+      <div class="tl-title">Month 2 — Early gains visible</div>
+      <div class="tl-body">Muscle fullness starts to show — shoulders, arms, chest first. Weight +1–1.5kg total. Creatine effect fully kicks in. Better pumps in the gym. Sleep and energy improve with magnesium.</div>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot" style="background:var(--amber)"></div>
+    <div>
+      <div class="tl-title">Month 3–4 — Visible transformation</div>
+      <div class="tl-body">Significant visible change — clothes fit differently, shoulders look broader. Estimated +2–3kg lean mass total. Strength benchmarks: bench +10–15kg, squat +15–20kg, deadlift +20–25kg from your starting point. People around you will notice.</div>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot" style="background:var(--coral)"></div>
+    <div>
+      <div class="tl-title">Month 5–6 — Fuller physique</div>
+      <div class="tl-body">Body weight ~69–71kg. Lean mass gain: 3–5kg total. BF% may stay similar or drop slightly (recomp effect since you're at 21%). This is when the classic bodybuilder fullness starts coming in — bigger arms, rounder shoulders, thicker chest. The payoff.</div>
+    </div>
+  </div>
+
+  <div class="sec">Realistic targets at 6 months</div>
+  <div class="metric-grid">
+    <div class="metric"><div class="metric-label">Lean mass gain</div><div class="metric-value">3–5<span class="metric-unit"> kg</span></div></div>
+    <div class="metric"><div class="metric-label">Target weight</div><div class="metric-value">~70<span class="metric-unit"> kg</span></div></div>
+    <div class="metric"><div class="metric-label">Bench press +</div><div class="metric-value">10–15<span class="metric-unit"> kg</span></div></div>
+    <div class="metric"><div class="metric-label">Deadlift +</div><div class="metric-value">20–25<span class="metric-unit"> kg</span></div></div>
+  </div>
+
+  <div class="sec">Potential obstacles & solutions</div>
+  <div class="info-card">
+    <div class="info-body">
+      <b>Low diet discipline</b> → Same 4 meals every day. Remove all choices.<br><br>
+      <b>Protein gap (eggetarian)</b> → Lean on eggs, paneer, whey, curd, Greek yogurt. Don't rely on dal alone — it's not enough protein density.<br><br>
+      <b>Missed gym sessions</b> → Miss 1? Do it next day. Miss 2? Shift the week. Never "restart on Monday."<br><br>
+      <b>Slow visible progress</b> → Check sleep first, then calories, then training log. Usually one of these three is the culprit.<br><br>
+      <b>Short sleep (6–7 hrs)</b> → Take magnesium glycinate before bed. Target 7.5 hrs consistently. This is non-negotiable — sleep is when muscle is built.
+    </div>
+  </div>
+
+  <div class="sec">Progress tracking checklist</div>
+  <div class="info-card">
+    <div class="info-body">
+      ☐ &nbsp;<b>Weekly weigh-in</b> — same day, morning, fasted. Track the trend, not day-to-day fluctuations.<br>
+      ☐ &nbsp;<b>Monthly progress photo</b> — same lighting, same pose (front + side).<br>
+      ☐ &nbsp;<b>Workout log</b> — note weights and reps every session. Progressive overload needs data.<br>
+      ☐ &nbsp;<b>Monthly waist measurement</b> — if waist is growing fast, dial back the surplus slightly.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ TAB BAR -->
+<div class="tabbar">
+  <div class="tabitem active" onclick="showPanel('overview', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Overview
+  </div>
+  <div class="tabitem" onclick="showPanel('training', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4v16M18 4v16M2 8h4M18 8h4M2 16h4M18 16h4M6 12h12"/></svg>
+    Training
+  </div>
+  <div class="tabitem" onclick="showPanel('nutrition', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+    Nutrition
+  </div>
+  <div class="tabitem" onclick="showPanel('supps', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+    Supps
+  </div>
+  <div class="tabitem" onclick="showPanel('timeline', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Timeline
+  </div>
+</div>
+
+<script>
+function showPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tabitem').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo(0, 0);
+}
+function toggleAcc(header) {
+  const acc = header.closest('.acc');
+  const body = acc.querySelector('.acc-body');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+</script>
+</body>
+</html>
