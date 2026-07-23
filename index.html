@@ -694,26 +694,49 @@
 
 <script>
 // ── GOOGLE APPS SCRIPT URL ──
-const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZ3gtEvCJAsstBYLgTH4u-b0JsMS9LqRCrOA9E8kLXXVFjmzQgOnM87rRYcJwfw6ED/exec';
 
-// ── TIMER LOGIC ──
+// ── TIMER LOGIC (iOS COMPATIBLE) ──
 let timerInterval = null;
 let remainingSeconds = 0;
+let audioCtx = null;
+
+function unlockAudioContext() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    gain.gain.value = 0.001;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(0);
+    osc.stop(audioCtx.currentTime + 0.01);
+  } catch(e) {}
+}
 
 function startRestTimer(seconds) {
+  unlockAudioContext();
   stopRestTimer();
   remainingSeconds = seconds;
   updateTimerDisplay();
   
   const bar = document.getElementById('sticky-timer-bar');
-  if(bar) bar.classList.add('active');
+  if(bar) {
+    bar.style.background = 'rgba(26,26,26,0.95)';
+    bar.classList.add('active');
+  }
 
   timerInterval = setInterval(() => {
     remainingSeconds--;
     updateTimerDisplay();
     if(remainingSeconds <= 0) {
       triggerTimerAlert();
-      stopRestTimer();
+      stopRestTimer(false);
     }
   }, 1000);
 }
@@ -723,36 +746,61 @@ function addTimerTime(secs) {
   updateTimerDisplay();
 }
 
-function stopRestTimer() {
+function stopRestTimer(hideBar = true) {
   if(timerInterval) clearInterval(timerInterval);
   timerInterval = null;
   const bar = document.getElementById('sticky-timer-bar');
-  if(bar) bar.classList.remove('active');
+  if(bar && hideBar) {
+    bar.classList.remove('active');
+    bar.style.background = 'rgba(26,26,26,0.95)';
+  }
 }
 
 function updateTimerDisplay() {
-  const m = Math.floor(remainingSeconds / 60);
-  const s = remainingSeconds % 60;
+  const m = Math.floor(Math.max(0, remainingSeconds) / 60);
+  const s = Math.max(0, remainingSeconds) % 60;
   const str = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   const el = document.getElementById('st-display');
   if(el) el.textContent = str;
 }
 
 function triggerTimerAlert() {
-  if(navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 400]);
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const playBeep = (freq, start) => {
-      const osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      osc.connect(ctx.destination);
-      osc.start(start);
-      osc.stop(start + 0.15);
-    };
-    playBeep(880, ctx.currentTime);
-    playBeep(1200, ctx.currentTime + 0.2);
+    if (audioCtx) {
+      const playBeep = (freq, start) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.3, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(start);
+        osc.stop(start + 0.3);
+      };
+      playBeep(880, audioCtx.currentTime);
+      playBeep(1200, audioCtx.currentTime + 0.25);
+      playBeep(880, audioCtx.currentTime + 0.5);
+    }
   } catch(e) {}
+
+  if(navigator.vibrate) {
+    navigator.vibrate([200, 100, 200, 100, 400]);
+  }
+
+  const bar = document.getElementById('sticky-timer-bar');
+  const display = document.getElementById('st-display');
+  if(bar && display) {
+    display.textContent = "TIME'S UP! 🔔";
+    bar.style.background = 'var(--green)';
+    bar.style.transition = 'background 0.3s ease';
+    
+    setTimeout(() => {
+      bar.classList.remove('active');
+      bar.style.background = 'rgba(26,26,26,0.95)';
+    }, 4000);
+  }
 }
 
 // ── STORAGE ──
