@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="My Plan">
 
+<!-- CACHE-BUSTING HEADERS -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -31,6 +32,22 @@
   .tabitem svg{width:22px;height:22px;}
   .panel{display:none;padding:16px 16px 0;}
   .panel.active{display:block;}
+
+  /* ── TIMER STYLES ── */
+  .timer-banner{background:var(--surface);border:1px solid var(--accent);border-radius:14px;padding:12px;margin-bottom:14px;display:flex;flex-direction:column;gap:8px;}
+  .timer-top{display:flex;justify-content:space-between;align-items:center;}
+  .timer-title{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;display:flex;align-items:center;gap:4px;}
+  .timer-presets{display:flex;gap:6px;}
+  .timer-chip{background:var(--surface2);border:0.5px solid var(--border);color:var(--text);font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;cursor:pointer;}
+  .timer-chip:active{background:var(--accent);color:#fff;}
+  
+  /* Sticky active timer bar */
+  .sticky-timer{position:fixed;top:0;left:0;right:0;background:rgba(26,26,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--accent);padding:10px 16px;z-index:200;display:none;align-items:center;justify-content:space-between;box-shadow:0 4px 12px rgba(0,0,0,0.5);}
+  .sticky-timer.active{display:flex;}
+  .st-time{font-size:18px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;}
+  .st-actions{display:flex;gap:8px;}
+  .st-btn{background:var(--surface2);border:0.5px solid var(--border);color:var(--text);font-size:11px;font-weight:700;padding:5px 10px;border-radius:6px;cursor:pointer;}
+  .st-btn.cancel{color:var(--coral);border-color:rgba(232,98,74,0.3);}
 
   /* ── HOME COMPONENTS ── */
   .hero-card{background:linear-gradient(135deg, rgba(79,142,247,0.18) 0%, rgba(26,26,26,1) 100%);border:0.5px solid rgba(79,142,247,0.35);border-radius:18px;padding:18px;margin-bottom:16px;}
@@ -97,12 +114,14 @@
   b{color:var(--text);font-weight:600;}
 
   /* ── COMPACT EXERCISE TABLE UI ── */
-  .ex-header-compact{display:grid;grid-template-columns:1fr 40px 60px 48px;gap:4px;padding:8px 12px;background:var(--surface2);font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
-  .ex-row-compact{display:grid;grid-template-columns:1fr 40px 60px 48px;gap:4px;padding:10px 12px;border-bottom:0.5px solid var(--border);align-items:center;background:var(--surface);}
+  .ex-header-compact{display:grid;grid-template-columns:1fr 38px 58px 54px;gap:4px;padding:8px 12px;background:var(--surface2);font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+  .ex-row-compact{display:grid;grid-template-columns:1fr 38px 58px 54px;gap:4px;padding:10px 12px;border-bottom:0.5px solid var(--border);align-items:center;background:var(--surface);}
   .ex-row-compact:last-child{border-bottom:none;}
   .ex-name-c{font-size:13px;font-weight:600;}
   .ex-note-c{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.3;}
   .ex-val-c{font-size:12px;font-weight:600;text-align:center;}
+  .rest-trigger{background:var(--surface2);border:0.5px solid var(--border);color:var(--accent);font-size:10px;font-weight:700;padding:4px 6px;border-radius:6px;cursor:pointer;text-align:center;}
+  .rest-trigger:active{background:var(--accent);color:#fff;}
 
   .cardio-compact{background:rgba(76,175,125,0.08);border-top:0.5px solid rgba(76,175,125,0.2);padding:10px 12px;font-size:11px;color:var(--green);display:flex;align-items:center;gap:8px;}
   .warmup-row{padding:8px 12px;border-bottom:0.5px solid var(--border);font-size:12px;display:flex;align-items:center;gap:10px;}
@@ -170,6 +189,18 @@
 </style>
 </head>
 <body>
+
+<!-- STICKY REST TIMER BAR -->
+<div class="sticky-timer" id="sticky-timer-bar">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span>⏱️ Rest Timer:</span>
+    <span class="st-time" id="st-display">01:30</span>
+  </div>
+  <div class="st-actions">
+    <button class="st-btn" onclick="addTimerTime(15)">+15s</button>
+    <button class="st-btn cancel" onclick="stopRestTimer()">Cancel</button>
+  </div>
+</div>
 
 <div class="header">
   <h1>💪 Manoj's Plan</h1>
@@ -278,7 +309,22 @@
 
 <!-- ══════════════════════════════════ TRAINING ══ -->
 <div id="panel-training" class="panel">
-  <div class="sec" style="margin-top:16px;">Workout Routines</div>
+  <!-- QUICK REST TIMER WIDGET -->
+  <div class="timer-banner">
+    <div class="timer-top">
+      <span class="timer-title">⏱️ Quick Rest Timer</span>
+      <span style="font-size:11px;color:var(--muted)">Tap to start rest countdown</span>
+    </div>
+    <div class="timer-presets">
+      <button class="timer-chip" onclick="startRestTimer(60)">60s</button>
+      <button class="timer-chip" onclick="startRestTimer(90)">90s</button>
+      <button class="timer-chip" onclick="startRestTimer(120)">2 min</button>
+      <button class="timer-chip" onclick="startRestTimer(150)">2.5 min</button>
+      <button class="timer-chip" onclick="startRestTimer(180)">3 min</button>
+    </div>
+  </div>
+
+  <div class="sec">Workout Routines</div>
 
   <!-- WARM UP ACCORDION -->
   <div class="acc" style="border-color:var(--accent);">
@@ -310,27 +356,33 @@
       <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">1. Barbell Bench Press</div><div class="ex-note-c">Pinch shoulder blades back & down</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">6–8</div><div class="ex-val-c">2.5m</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">6–8</div>
+        <button class="rest-trigger" onclick="startRestTimer(150)">2.5m ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">2. Leg Press</div><div class="ex-note-c">Squat alternative · drive through heels</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div><div class="ex-val-c">2m</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div>
+        <button class="rest-trigger" onclick="startRestTimer(120)">2m ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">3. Incline Dumbbell Press</div><div class="ex-note-c">Bench at 30° · upper chest width</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div><div class="ex-val-c">90s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div>
+        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">4. Walking Lunges / DB Split Squat</div><div class="ex-note-c">Single-leg strength & hip stability</div></div>
-        <div class="ex-val-c">2</div><div class="ex-val-c">10–12/l</div><div class="ex-val-c">90s</div>
+        <div class="ex-val-c">2</div><div class="ex-val-c">10–12/l</div>
+        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">5. Standing DB Overhead Tricep Ext</div><div class="ex-note-c">Deep stretch at bottom for long head</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">6. Cable Woodchopper / Leg Raise</div><div class="ex-note-c">Core stability & rotational power</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="cardio-compact">🏃‍♂️ <b>Cardio:</b> 15–20m Incline Walk (4.0–4.8 km/h | 6–10% Incline)</div>
     </div>
@@ -349,27 +401,33 @@
       <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">1. Lat Pulldown / Pull-Ups</div><div class="ex-note-c">Pull with elbows for V-taper lats</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">6–8</div><div class="ex-val-c">2m</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">6–8</div>
+        <button class="rest-trigger" onclick="startRestTimer(120)">2m ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">2. Conventional / Trap Bar Deadlift</div><div class="ex-note-c">Brace core, flat spine · primary pull</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">5–6</div><div class="ex-val-c">2.5m</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">5–6</div>
+        <button class="rest-trigger" onclick="startRestTimer(150)">2.5m ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">3. Seated Cable Row (Neutral Grip)</div><div class="ex-note-c">Squeeze blades to fix desk posture</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div><div class="ex-val-c">90s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div>
+        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">4. Lying or Seated Leg Curl</div><div class="ex-note-c">Isolates hamstrings safely</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">90s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">5. Cable or DB Face Pulls</div><div class="ex-note-c">Rear-delt & rotator cuff work</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">6. Incline DB Bicep Curl</div><div class="ex-note-c">Stretch bicep long head at bottom</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="cardio-compact">🏃‍♂️ <b>Cardio:</b> 15–20m Incline Walk (4.0–4.8 km/h | 6–10% Incline)</div>
     </div>
@@ -388,27 +446,33 @@
       <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">1. Seated DB Shoulder Press</div><div class="ex-note-c">Front & side delt mass builder</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div><div class="ex-val-c">2m</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div>
+        <button class="rest-trigger" onclick="startRestTimer(120)">2m ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">2. Romanian Deadlift (RDL)</div><div class="ex-note-c">Hinge hips back for hamstring stretch</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div><div class="ex-val-c">90s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div>
+        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">3. DB Lateral Raises</div><div class="ex-note-c">Lead with elbows for wide shoulders</div></div>
-        <div class="ex-val-c">4</div><div class="ex-val-c">12–15</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">12–15</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">4. Chest-Supported DB Row / Pullover</div><div class="ex-note-c">Back volume with zero lower-back fatigue</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">90s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">5. Cable Tricep Pushdowns</div><div class="ex-note-c">Keep elbows pinned to sides</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">6. Dumbbell Hammer Curls</div><div class="ex-note-c">Brachialis focus for thick arm size</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="cardio-compact">🏃‍♂️ <b>Cardio:</b> 15–20m Incline Walk (4.0–4.8 km/h | 6–10% Incline)</div>
     </div>
@@ -427,23 +491,28 @@
       <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">1. Cable or DB Lateral Raises</div><div class="ex-note-c">Shoulder width emphasis</div></div>
-        <div class="ex-val-c">4</div><div class="ex-val-c">12–15</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">12–15</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">2. Face Pulls / Band Pull-Aparts</div><div class="ex-note-c">Upper back posture & rear delts</div></div>
-        <div class="ex-val-c">4</div><div class="ex-val-c">15–20</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">15–20</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">3. Incline DB Bicep Curls</div><div class="ex-note-c">Bicep peak isolation</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">4. Overhead Cable Tricep Ext</div><div class="ex-note-c">Long head tricep extension</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="ex-row-compact">
         <div><div class="ex-name-c">5. Hanging Leg Raise / Pallof Press</div><div class="ex-note-c">Core bracing & anti-rotation</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div><div class="ex-val-c">60s</div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="cardio-compact">🧘‍♂️ <b>Finish:</b> 10m Spine Foam Rolling & Hip Stretch + 20m Incline Walk</div>
     </div>
@@ -624,8 +693,67 @@
 </div>
 
 <script>
+// ── GOOGLE APPS SCRIPT URL ──
+const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZ3gtEvCJAsstBYLgTH4u-b0JsMS9LqRCrOA9E8kLXXVFjmzQgOnM87rRYcJwfw6ED/exec';
+// ── TIMER LOGIC ──
+let timerInterval = null;
+let remainingSeconds = 0;
+
+function startRestTimer(seconds) {
+  stopRestTimer();
+  remainingSeconds = seconds;
+  updateTimerDisplay();
+  
+  const bar = document.getElementById('sticky-timer-bar');
+  if(bar) bar.classList.add('active');
+
+  timerInterval = setInterval(() => {
+    remainingSeconds--;
+    updateTimerDisplay();
+    if(remainingSeconds <= 0) {
+      triggerTimerAlert();
+      stopRestTimer();
+    }
+  }, 1000);
+}
+
+function addTimerTime(secs) {
+  remainingSeconds += secs;
+  updateTimerDisplay();
+}
+
+function stopRestTimer() {
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  const bar = document.getElementById('sticky-timer-bar');
+  if(bar) bar.classList.remove('active');
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(remainingSeconds / 60);
+  const s = remainingSeconds % 60;
+  const str = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  const el = document.getElementById('st-display');
+  if(el) el.textContent = str;
+}
+
+function triggerTimerAlert() {
+  if(navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 400]);
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const playBeep = (freq, start) => {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.15);
+    };
+    playBeep(880, ctx.currentTime);
+    playBeep(1200, ctx.currentTime + 0.2);
+  } catch(e) {}
+}
 
 // ── STORAGE ──
 function getLog() { try { return JSON.parse(localStorage.getItem('mj_log')) || []; } catch(e) { return []; } }
@@ -751,7 +879,7 @@ function toggleAcc(h) {
 }
 
 function autoExpandTodayWorkout() {
-  const dayIdx = new Date().getDay(); // 0 = Sun, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri
+  const dayIdx = new Date().getDay();
   const dayMap = { 2: 'acc-day-tue', 3: 'acc-day-wed', 4: 'acc-day-thu', 5: 'acc-day-opt' };
   const todayAccId = dayMap[dayIdx];
 
@@ -1256,7 +1384,7 @@ window.addEventListener('load',()=>{
   renderHomeDashboard();
   renderRecentEntries();
   autoExpandTodayWorkout();
-  fetchFromCloud(); // Automatically pulls latest Google Sheet data on app load
+  fetchFromCloud();
 });
 </script>
 </body>
