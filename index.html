@@ -6,7 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="My Plan">
+
 <link rel="manifest" href="manifest.json">
+
 <title>Manoj's Plan</title>
 <style>
   :root {
@@ -50,6 +52,8 @@
   .habit-check{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;}
   .habit-check.done{background:var(--green);border-color:var(--green);color:#fff;}
 
+  .spotify-wrap{margin-bottom:16px;overflow:hidden;border-radius:12px;}
+
   .pr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
   .pr-box{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;}
   .pr-val{font-size:15px;font-weight:700;color:var(--accent);margin-top:2px;}
@@ -63,38 +67,45 @@
   .metric.today{border-color:var(--accent);}
   
   .sec{font-size:11px;font-weight:600;letter-spacing:0.07em;color:var(--muted);text-transform:uppercase;margin:20px 0 10px;}
+
+  /* ── ACCORDION DESIGN ── */
   .acc{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden;}
-  .acc-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;}
+  .acc-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;user-select:none;}
   .acc-header:active{background:var(--surface2);}
-  .acc-title{font-size:15px;font-weight:600;}
-  .acc-sub{font-size:12px;color:var(--muted);margin-top:2px;}
-  .acc-body{display:none;border-top:0.5px solid var(--border);}
+  .acc-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;}
+  .acc-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+  .acc-body{display:none;border-top:0.5px solid var(--border);background:var(--bg);}
   .acc-body.open{display:block;}
   .chevron{transition:transform 0.2s;color:var(--muted);flex-shrink:0;margin-left:8px;width:18px;height:18px;min-width:18px;}
   .acc-header.open .chevron{transform:rotate(180deg);}
-  .ex-header{display:grid;grid-template-columns:1fr 44px 64px 54px;gap:6px;padding:10px 16px 6px;}
-  .ex-label{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;}
-  .ex-row{display:grid;grid-template-columns:1fr 44px 64px 54px;gap:6px;padding:10px 16px;border-top:0.5px solid var(--border);align-items:center;}
-  .ex-name{font-size:14px;font-weight:500;}
-  .ex-note{font-size:11px;color:var(--muted);margin-top:2px;}
-  .ex-val{font-size:14px;}
-  .badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;}
+
+  .badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;}
   .b-blue{background:rgba(79,142,247,0.15);color:var(--accent);}
   .b-green{background:rgba(76,175,125,0.15);color:var(--green);}
   .b-amber{background:rgba(245,166,35,0.15);color:var(--amber);}
   .b-coral{background:rgba(232,98,74,0.15);color:var(--coral);}
+  .b-purple{background:rgba(155,127,232,0.15);color:var(--purple);}
+
   .macro-row{margin-bottom:12px;}
   .macro-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;}
   .macro-track{background:var(--surface2);border-radius:4px;height:6px;overflow:hidden;}
   .macro-fill{height:100%;border-radius:4px;transition:width 0.3s ease;}
   .info-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;}
-  .tip{background:var(--surface2);border-radius:10px;padding:10px 14px;margin:6px 16px 14px;font-size:12px;color:var(--muted);line-height:1.5;}
   .tag-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
   b{color:var(--text);font-weight:600;}
-  .warmup{font-size:12px;color:var(--muted);padding:12px 16px;line-height:1.6;}
-  .phase-card{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;}
-  .phase-title{font-size:14px;font-weight:600;margin-bottom:6px;}
-  .phase-body{font-size:13px;color:var(--muted);line-height:1.65;}
+
+  /* ── COMPACT EXERCISE TABLE UI ── */
+  .ex-header-compact{display:grid;grid-template-columns:1fr 40px 60px 48px;gap:4px;padding:8px 12px;background:var(--surface2);font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+  .ex-row-compact{display:grid;grid-template-columns:1fr 40px 60px 48px;gap:4px;padding:10px 12px;border-bottom:0.5px solid var(--border);align-items:center;background:var(--surface);}
+  .ex-row-compact:last-child{border-bottom:none;}
+  .ex-name-c{font-size:13px;font-weight:600;}
+  .ex-note-c{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.3;}
+  .ex-val-c{font-size:12px;font-weight:600;text-align:center;}
+
+  .cardio-compact{background:rgba(76,175,125,0.08);border-top:0.5px solid rgba(76,175,125,0.2);padding:10px 12px;font-size:11px;color:var(--green);display:flex;align-items:center;gap:8px;}
+  .warmup-row{padding:8px 12px;border-bottom:0.5px solid var(--border);font-size:12px;display:flex;align-items:center;gap:10px;}
+  .warmup-row:last-child{border-bottom:none;}
+  .warmup-tag{background:var(--surface2);font-size:10px;font-weight:700;padding:3px 6px;border-radius:6px;color:var(--accent);min-width:24px;text-align:center;}
 
   /* ── LOG / ENTRY ── */
   .entry-card{background:var(--surface);border:0.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;}
@@ -181,7 +192,7 @@
   <div class="workout-today-card">
     <div class="today-tag" id="home-today-day">Thursday</div>
     <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;">Scheduled Training</div>
-    <div class="workout-title" id="home-workout-title">Day 3 — Shoulder Width, Arms & Hypertrophy</div>
+    <div class="workout-title" id="home-workout-title">Day 3 — Shoulder Width & Hypertrophy</div>
     <div class="workout-desc" id="home-workout-desc">DB Press, RDLs, Lateral Raises & Arms (~55 min)</div>
     <button class="workout-cta" onclick="showPanel('training')">Start Workout Routine →</button>
   </div>
@@ -204,6 +215,12 @@
       <div class="habit-left"><span>😴</span> 7.5 Hours Quality Sleep</div>
       <div class="habit-check" id="h-sleep" onclick="toggleHabit('sleep')">✓</div>
     </div>
+  </div>
+
+  <!-- SPOTIFY IFRAME -->
+  <div class="sec">Workout Music</div>
+  <div class="spotify-wrap">
+    <iframe style="border-radius: 12px" width="100%" height="352" title="Spotify Embed: GYM HARDSTYLE" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" src="https://open.spotify.com/embed/artist/4L5D0YgMaZOS1xJKUCBBMH?utm_source=oembed"></iframe>
   </div>
 
   <div class="sec">Estimated Strength 1RM Benchmarks</div>
@@ -262,132 +279,194 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════ TRAINING (UPDATED ROUTINE) ══ -->
+<!-- ══════════════════════════════════ TRAINING ══ -->
 <div id="panel-training" class="panel">
-  <div class="sec" style="margin-top:16px;">🛠️ Daily Warm-Up & Activation Routine</div>
-  <div class="info-card" style="margin-bottom:12px;">
-    <div class="info-body" style="font-size:13px;color:var(--muted);line-height:1.7;">
-      Perform this <b>6 to 8-minute routine</b> before every session to prepare your joints, wake up dormant glutes, and reverse 10 hours of desk sitting.
-    </div>
-  </div>
-  <div class="acc">
-    <div class="acc-header open" onclick="toggleAcc(this)">
-      <div><div class="acc-title">Pre-Workout Warm-Up Routine</div><div class="acc-sub">4 activation movements · ~6–8 min</div></div>
-      <svg class="chevron open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-    <div class="acc-body open">
-      <div class="warmup">
-        • <b>Cat-Cow:</b> 10 slow reps <i>(Mobilizes thoracic spine & lower back)</i><br>
-        • <b>Band / Towel Shoulder Dislocates:</b> 10 slow reps <i>(Opens chest & warms shoulder joints)</i><br>
-        • <b>Glute Bridges:</b> 12 reps with 2s squeeze at top <i>(Wakes up dormant glutes)</i><br>
-        • <b>World’s Greatest Stretch:</b> 5 reps / side <i>(Opens hip flexors & thoracic rotation)</i>
+  <div class="sec" style="margin-top:16px;">Workout Routines</div>
+
+  <!-- WARM UP ACCORDION -->
+  <div class="acc" style="border-color:var(--accent);">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div>
+        <div class="acc-title">🛠️ Daily Warm-Up & Activation <span class="badge b-blue">6–8 MIN</span></div>
+        <div class="acc-sub">Perform before every workout to reverse 10h desk sitting</div>
       </div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body">
+      <div class="warmup-row"><div class="warmup-tag">10x</div><div><b>Cat-Cow</b> — Mobilizes thoracic spine & lower back flexibility</div></div>
+      <div class="warmup-row"><div class="warmup-tag">10x</div><div><b>Band / Towel Shoulder Dislocates</b> — Opens chest & warms up shoulder joints</div></div>
+      <div class="warmup-row"><div class="warmup-tag">12x</div><div><b>Glute Bridges</b> — 2s hold at top to wake up dormant glutes</div></div>
+      <div class="warmup-row"><div class="warmup-tag">5x</div><div><b>World’s Greatest Stretch</b> — 5 reps/side for hip flexors & thoracic rotation</div></div>
     </div>
   </div>
 
-  <!-- TUESDAY: DAY 1 -->
-  <div class="sec">🗓️ Tuesday: Day 1 – Quad & Chest Focus (Push-Dominant)</div>
-  <div class="info-card" style="margin-bottom:10px;">
-    <div class="info-body" style="font-size:12px;color:var(--muted);">
-      <b>Goal:</b> Heavy horizontal pushing strength and quad building without heavy spine-compressing barbell squats.<br>
-      <b>Warm-up:</b> Daily Routine + 2 light warm-up sets on Bench Press.
+  <!-- TUESDAY: DAY 1 ACCORDION -->
+  <div class="acc" id="acc-day-tue">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div>
+        <div class="acc-title">🗓️ Tuesday: Day 1 – Quad & Chest <span class="badge b-blue">PUSH</span></div>
+        <div class="acc-sub">6 movements · ~55 min · Heavy horizontal pushing & quad focus</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body">
+      <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">1. Barbell Bench Press</div><div class="ex-note-c">Pinch shoulder blades back & down</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">6–8</div><div class="ex-val-c">2.5m</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">2. Leg Press</div><div class="ex-note-c">Squat alternative · drive through heels</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div><div class="ex-val-c">2m</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">3. Incline Dumbbell Press</div><div class="ex-note-c">Bench at 30° · upper chest width</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div><div class="ex-val-c">90s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">4. Walking Lunges / DB Split Squat</div><div class="ex-note-c">Single-leg strength & hip stability</div></div>
+        <div class="ex-val-c">2</div><div class="ex-val-c">10–12/l</div><div class="ex-val-c">90s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">5. Standing DB Overhead Tricep Ext</div><div class="ex-note-c">Deep stretch at bottom for long head</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">6. Cable Woodchopper / Leg Raise</div><div class="ex-note-c">Core stability & rotational power</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="cardio-compact">🏃‍♂️ <b>Cardio:</b> 15–20m Incline Walk (4.0–4.8 km/h | 6–10% Incline)</div>
     </div>
   </div>
+
+  <!-- WEDNESDAY: DAY 2 ACCORDION -->
+  <div class="acc" id="acc-day-wed">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div>
+        <div class="acc-title">🗓️ Wednesday: Day 2 – Back & Hamstrings <span class="badge b-green">PULL</span></div>
+        <div class="acc-sub">6 movements · ~60 min · V-taper lats, deadlifts & posture</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body">
+      <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">1. Lat Pulldown / Pull-Ups</div><div class="ex-note-c">Pull with elbows for V-taper lats</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">6–8</div><div class="ex-val-c">2m</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">2. Conventional / Trap Bar Deadlift</div><div class="ex-note-c">Brace core, flat spine · primary pull</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">5–6</div><div class="ex-val-c">2.5m</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">3. Seated Cable Row (Neutral Grip)</div><div class="ex-note-c">Squeeze blades to fix desk posture</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div><div class="ex-val-c">90s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">4. Lying or Seated Leg Curl</div><div class="ex-note-c">Isolates hamstrings safely</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">90s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">5. Cable or DB Face Pulls</div><div class="ex-note-c">Rear-delt & rotator cuff work</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">6. Incline DB Bicep Curl</div><div class="ex-note-c">Stretch bicep long head at bottom</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="cardio-compact">🏃‍♂️ <b>Cardio:</b> 15–20m Incline Walk (4.0–4.8 km/h | 6–10% Incline)</div>
+    </div>
+  </div>
+
+  <!-- THURSDAY: DAY 3 ACCORDION -->
+  <div class="acc" id="acc-day-thu">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div>
+        <div class="acc-title">🗓️ Thursday: Day 3 – Shoulder Width & Arms <span class="badge b-amber">HYPERTROPHY</span></div>
+        <div class="acc-sub">6 movements · ~55 min · Side delts, arms & full-body finish</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body">
+      <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">1. Seated DB Shoulder Press</div><div class="ex-note-c">Front & side delt mass builder</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div><div class="ex-val-c">2m</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">2. Romanian Deadlift (RDL)</div><div class="ex-note-c">Hinge hips back for hamstring stretch</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div><div class="ex-val-c">90s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">3. DB Lateral Raises</div><div class="ex-note-c">Lead with elbows for wide shoulders</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">12–15</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">4. Chest-Supported DB Row / Pullover</div><div class="ex-note-c">Back volume with zero lower-back fatigue</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">90s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">5. Cable Tricep Pushdowns</div><div class="ex-note-c">Keep elbows pinned to sides</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">6. Dumbbell Hammer Curls</div><div class="ex-note-c">Brachialis focus for thick arm size</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="cardio-compact">🏃‍♂️ <b>Cardio:</b> 15–20m Incline Walk (4.0–4.8 km/h | 6–10% Incline)</div>
+    </div>
+  </div>
+
+  <!-- OPTIONAL 4TH DAY ACCORDION -->
+  <div class="acc" id="acc-day-opt">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div>
+        <div class="acc-title">🗓️ Optional Day 4 – Posture & Weak Points <span class="badge b-purple">RECOVERY</span></div>
+        <div class="acc-sub">5 movements · 1–2x/month · V-taper polish & active recovery</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body">
+      <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">1. Cable or DB Lateral Raises</div><div class="ex-note-c">Shoulder width emphasis</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">12–15</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">2. Face Pulls / Band Pull-Aparts</div><div class="ex-note-c">Upper back posture & rear delts</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">15–20</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">3. Incline DB Bicep Curls</div><div class="ex-note-c">Bicep peak isolation</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">4. Overhead Cable Tricep Ext</div><div class="ex-note-c">Long head tricep extension</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">5. Hanging Leg Raise / Pallof Press</div><div class="ex-note-c">Core bracing & anti-rotation</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div><div class="ex-val-c">60s</div>
+      </div>
+      <div class="cardio-compact">🧘‍♂️ <b>Finish:</b> 10m Spine Foam Rolling & Hip Stretch + 20m Incline Walk</div>
+    </div>
+  </div>
+
+  <!-- PROGRESSION STRATEGY ACCORDION -->
   <div class="acc">
-    <div class="acc-header open" onclick="toggleAcc(this)">
-      <div><div class="acc-title">Exercises</div><div class="acc-sub">6 movements · ~55 min</div></div>
-      <svg class="chevron open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div>
+        <div class="acc-title">📈 Progression Strategy</div>
+        <div class="acc-sub">6-Month periodization roadmap</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="acc-body open">
-      <div class="ex-header"><div class="ex-label">Exercise</div><div class="ex-label">Sets</div><div class="ex-label">Reps</div><div class="ex-label">Rest</div></div>
-      <div class="ex-row"><div><div class="ex-name">Barbell Bench Press</div><div class="ex-note">Pinch shoulder blades back & down into bench</div></div><div class="ex-val">3</div><div class="ex-val">6–8</div><div class="ex-val" style="font-size:12px">2.5 min</div></div>
-      <div class="ex-row"><div><div class="ex-name">Leg Press</div><div class="ex-note">Squat alternative · feet shoulder-width, push heels</div></div><div class="ex-val">3</div><div class="ex-val">8–10</div><div class="ex-val" style="font-size:12px">2 min</div></div>
-      <div class="ex-row"><div><div class="ex-name">Incline Dumbbell Press</div><div class="ex-note">Bench at 30° · target upper chest width</div></div><div class="ex-val">3</div><div class="ex-val">8–10</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Walking Lunges / DB Bulgarian Split Squat</div><div class="ex-note">Single-leg strength & hip stability</div></div><div class="ex-val">2</div><div class="ex-val">10–12/leg</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Standing Overhead DB Tricep Extension</div><div class="ex-note">Deep stretch at bottom to target long-head</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Cable Woodchoppers / Hanging Leg Raises</div><div class="ex-note">Core stability and rotational strength</div></div><div class="ex-val">3</div><div class="ex-val">12–15</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="tip"><b>Post-Workout Cardio:</b> 15–20 Mins Incline Treadmill Walk (Speed: 4.0–4.8 km/h | Incline: 6–10%).</div>
+    <div class="acc-body" style="padding:12px;">
+      <div class="phase-card"><div class="phase-title" style="color:var(--accent)">Phase 1 — Months 1–2: Foundation</div><div class="phase-body">Learn movement patterns, build work capacity. <b>Double progression</b> — add weight only when top of rep range is hit for all sets 2 weeks running.</div></div>
+      <div class="phase-card"><div class="phase-title" style="color:var(--amber)">Phase 2 — Months 3–4: Accumulation</div><div class="phase-body">Add 1 set per compound. Introduce <b>weekly top sets</b> — heavy 3–5 rep set before back-off sets. Strength and size accelerate here.</div></div>
+      <div class="phase-card"><div class="phase-title" style="color:var(--coral)">Phase 3 — Months 5–6: Intensification</div><div class="phase-body"><b>Deload week every 4th week</b> (50% volume). Focus on rep PRs and full ROM. Physique consolidates. Reassess after month 6.</div></div>
     </div>
   </div>
-
-  <!-- WEDNESDAY: DAY 2 -->
-  <div class="sec">🗓️ Wednesday: Day 2 – Back, Rear Delts & Hamstrings (Pull-Dominant)</div>
-  <div class="info-card" style="margin-bottom:10px;">
-    <div class="info-body" style="font-size:12px;color:var(--muted);">
-      <b>Goal:</b> Lat width for V-taper, posterior strength, and posture correction for rounded desk shoulders.<br>
-      <b>Warm-up:</b> Daily Routine + 2 light warm-up sets on Lat Pulldown / Deadlift.
-    </div>
-  </div>
-  <div class="acc">
-    <div class="acc-header open" onclick="toggleAcc(this)">
-      <div><div class="acc-title">Exercises</div><div class="acc-sub">6 movements · ~60 min</div></div>
-      <svg class="chevron open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-    <div class="acc-body open">
-      <div class="ex-header"><div class="ex-label">Exercise</div><div class="ex-label">Sets</div><div class="ex-label">Reps</div><div class="ex-label">Rest</div></div>
-      <div class="ex-row"><div><div class="ex-name">Lat Pulldown / Bodyweight Pull-Ups</div><div class="ex-note">Pull with elbows to engage lats for V-taper width</div></div><div class="ex-val">3</div><div class="ex-val">6–8</div><div class="ex-val" style="font-size:12px">2 min</div></div>
-      <div class="ex-row"><div><div class="ex-name">Conventional OR Trap Bar Deadlift</div><div class="ex-note">Brace core, flat spine · primary strength builder</div></div><div class="ex-val">3</div><div class="ex-val">5–6</div><div class="ex-val" style="font-size:12px">2.5 min</div></div>
-      <div class="ex-row"><div><div class="ex-name">Seated Cable Row (Neutral Grip)</div><div class="ex-note">Squeeze shoulder blades to fix desk posture</div></div><div class="ex-val">3</div><div class="ex-val">8–10</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Lying OR Seated Leg Curl</div><div class="ex-note">Isolates hamstrings without lower back fatigue</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Cable or Dumbbell Face Pulls</div><div class="ex-note">Crucial rear-delt/rotator cuff work for posture</div></div><div class="ex-val">3</div><div class="ex-val">12–15</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Incline Dumbbell Bicep Curl</div><div class="ex-note">Seated on incline to stretch bicep long head</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="tip"><b>Post-Workout Cardio:</b> 15–20 Mins Incline Treadmill Walk (Speed: 4.0–4.8 km/h | Incline: 6–10%).</div>
-    </div>
-  </div>
-
-  <!-- THURSDAY: DAY 3 -->
-  <div class="sec">🗓️ Thursday: Day 3 – Shoulder Width, Arms & Full-Body Hypertrophy</div>
-  <div class="info-card" style="margin-bottom:10px;">
-    <div class="info-body" style="font-size:12px;color:var(--muted);">
-      <b>Goal:</b> Broaden side delts, build arm thickness, and finish weekly muscle volume without CNS burnout.<br>
-      <b>Warm-up:</b> Daily Routine + 2 light warm-up sets on DB Shoulder Press.
-    </div>
-  </div>
-  <div class="acc">
-    <div class="acc-header open" onclick="toggleAcc(this)">
-      <div><div class="acc-title">Exercises</div><div class="acc-sub">6 movements · ~55 min</div></div>
-      <svg class="chevron open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-    <div class="acc-body open">
-      <div class="ex-header"><div class="ex-label">Exercise</div><div class="ex-label">Sets</div><div class="ex-label">Reps</div><div class="ex-label">Rest</div></div>
-      <div class="ex-row"><div><div class="ex-name">Seated Dumbbell Shoulder Press</div><div class="ex-note">Drives front and side delt hypertrophy</div></div><div class="ex-val">3</div><div class="ex-val">8–10</div><div class="ex-val" style="font-size:12px">2 min</div></div>
-      <div class="ex-row"><div><div class="ex-name">Romanian Deadlift (RDL - DB or Barbell)</div><div class="ex-note">Soft bend in knees, hinge hips back for hamstring stretch</div></div><div class="ex-val">3</div><div class="ex-val">8–10</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Dumbbell Lateral Raises</div><div class="ex-note">Lead with elbows; key movement for shoulder width</div></div><div class="ex-val">4</div><div class="ex-val">12–15</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Chest-Supported DB Row / Lat Pullover</div><div class="ex-note">Back volume with zero strain on lower back</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">90 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Cable Tricep Pushdowns</div><div class="ex-note">Keep elbows pinned to sides throughout</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Dumbbell Hammer Curls</div><div class="ex-note">Targets brachialis for thicker upper arms and forearms</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="tip"><b>Post-Workout Cardio:</b> 15–20 Mins Incline Treadmill Walk (Speed: 4.0–4.8 km/h | Incline: 6–10%).</div>
-    </div>
-  </div>
-
-  <!-- OPTIONAL 4TH DAY -->
-  <div class="sec">🗓️ Optional 4th Day (1–2x / Month – Friday or Weekend)</div>
-  <div class="info-card" style="margin-bottom:10px;">
-    <div class="info-body" style="font-size:12px;color:var(--muted);">
-      <b>Goal:</b> Target V-Taper weak points, posture maintenance, and active recovery.<br>
-      <b>Warm-up:</b> Daily Routine.
-    </div>
-  </div>
-  <div class="acc">
-    <div class="acc-header open" onclick="toggleAcc(this)">
-      <div><div class="acc-title">Exercises</div><div class="acc-sub">5 movements · ~45 min</div></div>
-      <svg class="chevron open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-    <div class="acc-body open">
-      <div class="ex-header"><div class="ex-label">Exercise</div><div class="ex-label">Sets</div><div class="ex-label">Reps</div><div class="ex-label">Rest</div></div>
-      <div class="ex-row"><div><div class="ex-name">Cable or Dumbbell Lateral Raises</div><div class="ex-note">Shoulder width focus</div></div><div class="ex-val">4</div><div class="ex-val">12–15</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Face Pulls / Band Pull-Aparts</div><div class="ex-note">Upper back posture and rear delts</div></div><div class="ex-val">4</div><div class="ex-val">15–20</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Incline Dumbbell Bicep Curls</div><div class="ex-note">Arm isolation</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Overhead Cable Tricep Extensions</div><div class="ex-note">Long head tricep work</div></div><div class="ex-val">3</div><div class="ex-val">10–12</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="ex-row"><div><div class="ex-name">Hanging Leg Raises / Pallof Press</div><div class="ex-note">Core stabilization</div></div><div class="ex-val">3</div><div class="ex-val">12–15</div><div class="ex-val" style="font-size:12px">60 sec</div></div>
-      <div class="tip"><b>Finish:</b> 10 mins Thoracic Spine Foam Rolling & Hip Flexor Stretches + 20 mins Incline Treadmill Walk.</div>
-    </div>
-  </div>
-
-  <div class="sec">progression strategy</div>
-  <div class="phase-card"><div class="phase-title" style="color:var(--accent)">Phase 1 — Months 1–2: Foundation</div><div class="phase-body">Learn movement patterns, build work capacity. <b>Double progression</b> — add weight only when top of rep range is hit for all sets 2 weeks running.</div></div>
-  <div class="phase-card"><div class="phase-title" style="color:var(--amber)">Phase 2 — Months 3–4: Accumulation</div><div class="phase-body">Add 1 set per compound. Introduce <b>weekly top sets</b> — heavy 3–5 rep set before back-off sets. Strength and size accelerate here.</div></div>
-  <div class="phase-card"><div class="phase-title" style="color:var(--coral)">Phase 3 — Months 5–6: Intensification</div><div class="phase-body"><b>Deload week every 4th week</b> (50% volume). Focus on rep PRs and full ROM. Physique consolidates. Reassess after month 6.</div></div>
 </div>
 
 <!-- ══════════════════════════════════ LOG ══ -->
@@ -614,6 +693,7 @@ function showPanel(id, el) {
 
   window.scrollTo(0,0);
   if(id==='overview') renderHomeDashboard();
+  if(id==='training') autoExpandTodayWorkout();
   if(id==='calc') runAllCalcs();
   if(id==='progress') renderProgress();
   if(id==='log') {
@@ -624,12 +704,38 @@ function showPanel(id, el) {
 }
 
 function toggleAcc(h) {
-  const b=h.closest('.acc').querySelector('.acc-body');
-  b.classList.toggle('open'); h.classList.toggle('open');
+  const acc = h.closest('.acc');
+  const body = acc.querySelector('.acc-body');
+  const isOpen = body.classList.contains('open');
+  
+  if(isOpen) {
+    body.classList.remove('open');
+    h.classList.remove('open');
+  } else {
+    body.classList.add('open');
+    h.classList.add('open');
+  }
 }
-function toggleCalc(h) {
-  const b=h.nextElementSibling;
-  b.classList.toggle('open'); h.classList.toggle('open');
+
+function autoExpandTodayWorkout() {
+  const dayIdx = new Date().getDay(); // 0 = Sun, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri
+  const dayMap = { 2: 'acc-day-tue', 3: 'acc-day-wed', 4: 'acc-day-thu', 5: 'acc-day-opt' };
+  const todayAccId = dayMap[dayIdx];
+
+  ['acc-day-tue', 'acc-day-wed', 'acc-day-thu', 'acc-day-opt'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) {
+      const h = el.querySelector('.acc-header');
+      const b = el.querySelector('.acc-body');
+      if(id === todayAccId) {
+        h.classList.add('open');
+        b.classList.add('open');
+      } else {
+        h.classList.remove('open');
+        b.classList.remove('open');
+      }
+    }
+  });
 }
 
 // ── HABIT TOGGLE ──
@@ -1116,6 +1222,7 @@ window.addEventListener('load',()=>{
   updateHeader();
   renderHomeDashboard();
   renderRecentEntries();
+  autoExpandTodayWorkout();
 });
 </script>
 </body>
