@@ -122,6 +122,7 @@
   .save-btn{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:13px;width:100%;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;letter-spacing:0.01em;}
   .save-btn:active{opacity:0.8;}
   .saved-toast{display:none;text-align:center;color:var(--green);font-size:13px;font-weight:600;margin-top:8px;}
+  .sync-indicator{font-size:11px;text-align:center;color:var(--muted);margin-top:6px;}
 
   /* ── CALC RESULTS ── */
   .calc-section{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden;}
@@ -513,6 +514,7 @@
 
     <button class="save-btn" onclick="saveEntry()">✓ Save entry</button>
     <div class="saved-toast" id="save-toast">✓ Saved! Home dashboard, Calculators, and Progress updated.</div>
+    <div class="sync-indicator" id="sync-status">☁️ Cloud Sync Active</div>
   </div>
 
   <div class="sec">Recent entries</div>
@@ -622,9 +624,12 @@
 </div>
 
 <script>
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZ3gtEvCJAsstBYLgTH4u-b0JsMS9LqRCrOA9E8kLXXVFjmzQgOnM87rRYcJwfw6ED/exec';
+
 // ── STORAGE ──
 function getLog() { try { return JSON.parse(localStorage.getItem('mj_log')) || []; } catch(e) { return []; } }
-function setLog(d) { localStorage.setItem('mj_log', JSON.stringify(d)); }
+function setLog(d) { localStorage.setItem('mj_log', JSON.stringify(d)); syncToCloud(d); }
 function getProfile() { try { return JSON.parse(localStorage.getItem('mj_profile')) || {}; } catch(e) { return {}; } }
 function setProfile(d) { localStorage.setItem('mj_profile', JSON.stringify(d)); }
 function getPrefs() { try { return JSON.parse(localStorage.getItem('mj_prefs')) || {act:1.375,goal:'bulk',prot:2.5}; } catch(e) { return {act:1.375,goal:'bulk',prot:2.5}; } }
@@ -644,6 +649,38 @@ function getHabits() {
 function setHabits(h) { localStorage.setItem('mj_habits', JSON.stringify(h)); }
 
 let actMult=1.375, goalMode='bulk', protRate=2.5;
+
+// ── GOOGLE SHEETS CLOUD SYNC ──
+function syncToCloud(logData) {
+  if (!SCRIPT_URL || SCRIPT_URL.includes('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE')) return;
+  const statusEl = document.getElementById('sync-status');
+  if (statusEl) statusEl.textContent = '⏳ Syncing to Google Sheets...';
+  
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'saveLog', payload: logData })
+  }).then(() => {
+    if (statusEl) statusEl.textContent = '☁️ Synced to Google Sheets ✓';
+  }).catch(() => {
+    if (statusEl) statusEl.textContent = '⚠️ Cloud sync failed (saved locally)';
+  });
+}
+
+function fetchFromCloud() {
+  if (!SCRIPT_URL || SCRIPT_URL.includes('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE')) return;
+  fetch(SCRIPT_URL)
+    .then(res => res.json())
+    .then(data => {
+      if (Array.isArray(data) && data.length > 0) {
+        localStorage.setItem('mj_log', JSON.stringify(data));
+        renderRecentEntries();
+        renderHomeDashboard();
+        updateHeader();
+      }
+    }).catch(e => console.log('Fetch error:', e));
+}
 
 // ── PREFILL LOG FORM ──
 function prefillLogForm(selectedDate) {
@@ -1219,6 +1256,7 @@ window.addEventListener('load',()=>{
   renderHomeDashboard();
   renderRecentEntries();
   autoExpandTodayWorkout();
+  fetchFromCloud(); // Automatically pulls latest Google Sheet data on app load
 });
 </script>
 </body>
