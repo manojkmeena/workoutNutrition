@@ -41,7 +41,6 @@
   .timer-chip{background:var(--surface2);border:0.5px solid var(--border);color:var(--text);font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;cursor:pointer;}
   .timer-chip:active{background:var(--accent);color:#fff;}
   
-  /* Sticky active timer bar */
   .sticky-timer{position:fixed;top:0;left:0;right:0;background:rgba(26,26,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--accent);padding:10px 16px;z-index:200;display:none;align-items:center;justify-content:space-between;box-shadow:0 4px 12px rgba(0,0,0,0.5);}
   .sticky-timer.active{display:flex;}
   .st-time{font-size:18px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;}
@@ -83,7 +82,7 @@
   .metric-label{font-size:11px;color:var(--muted);margin-bottom:4px;}
   .metric-value{font-size:22px;font-weight:600;}
   .metric-unit{font-size:12px;color:var(--muted);font-weight:400;}
-  .metric.today{border-color:var(--accent);}
+  .metric.today{border-color:var(--accent);border-width:1px;}
   
   .sec{font-size:11px;font-weight:600;letter-spacing:0.07em;color:var(--muted);text-transform:uppercase;margin:20px 0 10px;}
 
@@ -114,8 +113,8 @@
   b{color:var(--text);font-weight:600;}
 
   /* ── COMPACT EXERCISE TABLE UI ── */
-  .ex-header-compact{display:grid;grid-template-columns:1fr 38px 58px 54px;gap:4px;padding:8px 12px;background:var(--surface2);font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
-  .ex-row-compact{display:grid;grid-template-columns:1fr 38px 58px 54px;gap:4px;padding:10px 12px;border-bottom:0.5px solid var(--border);align-items:center;background:var(--surface);}
+  .ex-header-compact{display:grid;grid-template-columns:1fr 38px 64px 54px;gap:4px;padding:8px 12px;background:var(--surface2);font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+  .ex-row-compact{display:grid;grid-template-columns:1fr 38px 64px 54px;gap:4px;padding:10px 12px;border-bottom:0.5px solid var(--border);align-items:center;background:var(--surface);}
   .ex-row-compact:last-child{border-bottom:none;}
   .ex-name-c{font-size:13px;font-weight:600;}
   .ex-note-c{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.3;}
@@ -224,11 +223,11 @@
   </div>
 
   <div class="workout-today-card">
-    <div class="today-tag" id="home-today-day">Thursday</div>
-    <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;">Scheduled Training</div>
-    <div class="workout-title" id="home-workout-title">Day 3 — Shoulder Width & Hypertrophy</div>
-    <div class="workout-desc" id="home-workout-desc">DB Press, RDLs, Lateral Raises & Arms (~55 min)</div>
-    <button class="workout-cta" onclick="showPanel('training')">Start Workout Routine →</button>
+    <div class="today-tag" id="home-today-day">Friday</div>
+    <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;">Scheduled Routine</div>
+    <div class="workout-title" id="home-workout-title">Rest & Active Recovery</div>
+    <div class="workout-desc" id="home-workout-desc">Mobility work, 30 min walk, spine decompression & full recovery</div>
+    <button class="workout-cta" onclick="showPanel('training')">View Recovery Routine →</button>
   </div>
 
   <div class="sec">Today's Habits & Checklist</div>
@@ -290,18 +289,19 @@
 
   <div class="sec">Weekly Workout Schedule</div>
   <div class="metric-grid">
-    <div class="metric" id="sched-mon"><div class="metric-label">Monday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Rest</div><div style="font-size:11px;color:var(--muted)">Walk / mobility</div></div>
-    <div class="metric" id="sched-tue"><div class="metric-label">Tuesday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Day 1</div><div style="font-size:11px;color:var(--muted)">Quad & Chest</div></div>
-    <div class="metric" id="sched-wed"><div class="metric-label">Wednesday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Day 2</div><div style="font-size:11px;color:var(--muted)">Back & Hamstrings</div></div>
-    <div class="metric" id="sched-thu"><div class="metric-label">Thursday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Day 3</div><div style="font-size:11px;color:var(--muted)">Shoulders & Arms</div></div>
-    <div class="metric" id="sched-fri"><div class="metric-label">Friday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Day 4 (Opt)</div><div style="font-size:11px;color:var(--muted)">Posture & V-Taper</div></div>
-    <div class="metric" id="sched-sat"><div class="metric-label">Sat–Sun</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Rest</div><div style="font-size:11px;color:var(--muted)">Full recovery</div></div>
+    <div class="metric" id="sched-mon"><div class="metric-label">Monday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Rest</div><div style="font-size:11px;color:var(--muted)">Mobility & Walk</div></div>
+    <div class="metric" id="sched-tue"><div class="metric-label">Tuesday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Day 1</div><div style="font-size:11px;color:var(--muted)">Push (Chest & Delts)</div></div>
+    <div class="metric" id="sched-wed"><div class="metric-label">Wednesday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Day 2</div><div style="font-size:11px;color:var(--muted)">Pull (Back & Biceps)</div></div>
+    <div class="metric" id="sched-thu"><div class="metric-label">Thursday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Day 3</div><div style="font-size:11px;color:var(--muted)">Legs & Calves</div></div>
+    <div class="metric" id="sched-fri"><div class="metric-label">Friday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Rest</div><div style="font-size:11px;color:var(--muted)">Active Recovery</div></div>
+    <div class="metric" id="sched-sat"><div class="metric-label">Saturday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Day 4</div><div style="font-size:11px;color:var(--muted)">Push (Chest & Delts)</div></div>
+    <div class="metric" id="sched-sun" style="grid-column: 1 / -1;"><div class="metric-label">Sunday</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Day 5</div><div style="font-size:11px;color:var(--muted)">Pull (Back & Biceps)</div></div>
   </div>
 
   <div class="sec">Key Constraints & Strategy</div>
   <div class="tag-wrap">
-    <span class="badge b-blue">3–4 days/week</span><span class="badge b-blue">60 min sessions</span>
-    <span class="badge b-green">Joint-friendly (no heavy squats)</span><span class="badge b-amber">Low discipline → simple meals</span>
+    <span class="badge b-blue">5-Day PPL split (Tue/Wed/Thu/Sat/Sun)</span><span class="badge b-purple">Mon & Fri Full Recovery</span>
+    <span class="badge b-green">Joint-friendly focus</span><span class="badge b-amber">Low discipline → simple meals</span>
     <span class="badge b-amber">Eggetarian → eggs + dairy + whey</span>
     <span class="badge b-coral" id="badge-bf">21% BF → lean bulk</span><span class="badge b-coral">Skinny fat → V-taper priority</span>
   </div>
@@ -309,7 +309,6 @@
 
 <!-- ══════════════════════════════════ TRAINING ══ -->
 <div id="panel-training" class="panel">
-  <!-- QUICK REST TIMER WIDGET -->
   <div class="timer-banner">
     <div class="timer-top">
       <span class="timer-title">⏱️ Quick Rest Timer</span>
@@ -331,7 +330,7 @@
     <div class="acc-header" onclick="toggleAcc(this)">
       <div>
         <div class="acc-title">🛠️ Daily Warm-Up & Activation <span class="badge b-blue">6–8 MIN</span></div>
-        <div class="acc-sub">Perform before every workout to reverse 10h desk sitting</div>
+        <div class="acc-sub">Perform before every workout to prime joints & thoracic mobility</div>
       </div>
       <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
@@ -343,194 +342,262 @@
     </div>
   </div>
 
-  <!-- TUESDAY: DAY 1 ACCORDION -->
+  <!-- MONDAY: REST & ACTIVE RECOVERY ACCORDION -->
+  <div class="acc" id="acc-day-mon">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div>
+        <div class="acc-title">🗓️ Monday: Rest & Active Recovery <span class="badge b-purple">REST</span></div>
+        <div class="acc-sub">Full systemic recovery · mobility, light walking & central nervous system recharge</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body">
+      <div class="warmup-row"><div class="warmup-tag">30m</div><div><b>Outdoor Walk:</b> Low-intensity steady walk for active blood flow and lymphatic drainage</div></div>
+      <div class="warmup-row"><div class="warmup-tag">10m</div><div><b>Thoracic & Hip Mobility:</b> World’s Greatest Stretch, 90/90 hip flow & deep squat holds</div></div>
+      <div class="warmup-row"><div class="warmup-tag">5m</div><div><b>Spine Decompression:</b> Hanging from a pull-up bar (3 × 45s) & foam rolling upper back</div></div>
+      <div class="cardio-compact">🧘‍♂️ <b>Goal:</b> 8h+ sleep, 3.5L hydration & hitting 165g protein target with zero lifting stress.</div>
+    </div>
+  </div>
+
+  <!-- TUESDAY: DAY 1 ACCORDION (PUSH) -->
   <div class="acc" id="acc-day-tue">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div>
-        <div class="acc-title">🗓️ Tuesday: Day 1 – Quad & Chest <span class="badge b-blue">PUSH</span></div>
-        <div class="acc-sub">6 movements · ~55 min · Heavy horizontal pushing & quad focus</div>
+        <div class="acc-title">🗓️ Tuesday: Day 1 – Push (Chest · Shoulders · Triceps) <span class="badge b-blue">PUSH</span></div>
+        <div class="acc-sub">6 movements + cardio · ~55 min · Primary horizontal & vertical pressing</div>
       </div>
       <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="acc-body">
       <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">1. Barbell Bench Press</div><div class="ex-note-c">Pinch shoulder blades back & down</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">6–8</div>
-        <button class="rest-trigger" onclick="startRestTimer(150)">2.5m ⏱️</button>
-      </div>
-      <div class="ex-row-compact">
-        <div><div class="ex-name-c">2. Leg Press</div><div class="ex-note-c">Squat alternative · drive through heels</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div>
+        <div><div class="ex-name-c">1. Flat Bench Press</div><div class="ex-note-c">Barbell / DB · pinch scapula back & down</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">8–12</div>
         <button class="rest-trigger" onclick="startRestTimer(120)">2m ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">3. Incline Dumbbell Press</div><div class="ex-note-c">Bench at 30° · upper chest width</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div>
-        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
-      </div>
-      <div class="ex-row-compact">
-        <div><div class="ex-name-c">4. Walking Lunges / DB Split Squat</div><div class="ex-note-c">Single-leg strength & hip stability</div></div>
-        <div class="ex-val-c">2</div><div class="ex-val-c">10–12/l</div>
-        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
-      </div>
-      <div class="ex-row-compact">
-        <div><div class="ex-name-c">5. Standing DB Overhead Tricep Ext</div><div class="ex-note-c">Deep stretch at bottom for long head</div></div>
+        <div><div class="ex-name-c">2. Incline Dumbbell Press</div><div class="ex-note-c">Bench at 30° · upper chest stretch</div></div>
         <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
-        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">6. Cable Woodchopper / Leg Raise</div><div class="ex-note-c">Core stability & rotational power</div></div>
+        <div><div class="ex-name-c">3. Overhead Shoulder Press</div><div class="ex-note-c">Barbell or DB · full vertical press</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">8–10</div>
+        <button class="rest-trigger" onclick="startRestTimer(120)">2m ⏱️</button>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">4. Lateral Raises</div><div class="ex-note-c">Lead with elbows for side delt width</div></div>
         <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div>
         <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
-      <div class="cardio-compact">🏃‍♂️ <b>Cardio:</b> 15–20m Incline Walk (4.0–4.8 km/h | 6–10% Incline)</div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">5. Tricep Pushdown</div><div class="ex-note-c">Cable rope / bar · pin elbows to sides</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">6. Overhead Tricep Ext.</div><div class="ex-note-c">Dumbbell / cable · stretch tricep long head</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+      </div>
+      <div class="cardio-compact">🏃‍♂️ <b>7. Incline Treadmill Walk:</b> 20 minutes (4.0–4.8 km/h | 6–10% Incline)</div>
     </div>
   </div>
 
-  <!-- WEDNESDAY: DAY 2 ACCORDION -->
+  <!-- WEDNESDAY: DAY 2 ACCORDION (PULL) -->
   <div class="acc" id="acc-day-wed">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div>
-        <div class="acc-title">🗓️ Wednesday: Day 2 – Back & Hamstrings <span class="badge b-green">PULL</span></div>
-        <div class="acc-sub">6 movements · ~60 min · V-taper lats, deadlifts & posture</div>
+        <div class="acc-title">🗓️ Wednesday: Day 2 – Pull (Back · Biceps · Rear Delts) <span class="badge b-green">PULL</span></div>
+        <div class="acc-sub">6 movements + cycling · ~55 min · Full back width, row thickness & arm curls</div>
       </div>
       <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="acc-body">
       <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">1. Lat Pulldown / Pull-Ups</div><div class="ex-note-c">Pull with elbows for V-taper lats</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">6–8</div>
+        <div><div class="ex-name-c">1. Lat Pulldown</div><div class="ex-note-c">Pull with elbows · wide V-taper lat builder</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">6–10</div>
         <button class="rest-trigger" onclick="startRestTimer(120)">2m ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">2. Conventional / Trap Bar Deadlift</div><div class="ex-note-c">Brace core, flat spine · primary pull</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">5–6</div>
-        <button class="rest-trigger" onclick="startRestTimer(150)">2.5m ⏱️</button>
-      </div>
-      <div class="ex-row-compact">
-        <div><div class="ex-name-c">3. Seated Cable Row (Neutral Grip)</div><div class="ex-note-c">Squeeze blades to fix desk posture</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div>
+        <div><div class="ex-name-c">2. Seated Cable Row</div><div class="ex-note-c">Squeeze shoulder blades for mid-back thickness</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">8–12</div>
         <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">4. Lying or Seated Leg Curl</div><div class="ex-note-c">Isolates hamstrings safely</div></div>
+        <div><div class="ex-name-c">3. Single-Arm Dumbbell Row</div><div class="ex-note-c">Full stretch at bottom & controlled lat pull</div></div>
         <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
         <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">5. Cable or DB Face Pulls</div><div class="ex-note-c">Rear-delt & rotator cuff work</div></div>
+        <div><div class="ex-name-c">4. Face Pulls</div><div class="ex-note-c">High pull to forehead for rear delts & posture</div></div>
         <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div>
         <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">6. Incline DB Bicep Curl</div><div class="ex-note-c">Stretch bicep long head at bottom</div></div>
+        <div><div class="ex-name-c">5. Barbell Curl</div><div class="ex-note-c">Strict elbow pivot for bicep mass building</div></div>
         <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
         <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
-      <div class="cardio-compact">🏃‍♂️ <b>Cardio:</b> 15–20m Incline Walk (4.0–4.8 km/h | 6–10% Incline)</div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">6. Hammer Curls</div><div class="ex-note-c">Neutral grip for brachialis & arm thickness</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+      </div>
+      <div class="cardio-compact">🚴 <b>7. Cycling:</b> 12–15 minutes (Moderate resistance & steady cadence)</div>
     </div>
   </div>
 
-  <!-- THURSDAY: DAY 3 ACCORDION -->
+  <!-- THURSDAY: DAY 3 ACCORDION (LEGS) -->
   <div class="acc" id="acc-day-thu">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div>
-        <div class="acc-title">🗓️ Thursday: Day 3 – Shoulder Width & Arms <span class="badge b-amber">HYPERTROPHY</span></div>
-        <div class="acc-sub">6 movements · ~55 min · Side delts, arms & full-body finish</div>
+        <div class="acc-title">🗓️ Thursday: Day 3 – Legs <span class="badge b-amber">LEGS</span></div>
+        <div class="acc-sub">6 movements + cooldown · ~55 min · Squats, posterior chain & calves</div>
       </div>
       <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="acc-body">
       <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">1. Seated DB Shoulder Press</div><div class="ex-note-c">Front & side delt mass builder</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div>
+        <div><div class="ex-name-c">1. Barbell Squat</div><div class="ex-note-c">Brace core, full depth, drive through mid-foot</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">8–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(150)">2.5m ⏱️</button>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">2. Romanian Deadlifts</div><div class="ex-note-c">Hinge hips back for hamstring & glute stretch</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">10–12</div>
         <button class="rest-trigger" onclick="startRestTimer(120)">2m ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">2. Romanian Deadlift (RDL)</div><div class="ex-note-c">Hinge hips back for hamstring stretch</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">8–10</div>
+        <div><div class="ex-name-c">3. Leg Press</div><div class="ex-note-c">Full range without lower back rounding</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–15</div>
         <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">3. DB Lateral Raises</div><div class="ex-note-c">Lead with elbows for wide shoulders</div></div>
-        <div class="ex-val-c">4</div><div class="ex-val-c">12–15</div>
+        <div><div class="ex-name-c">4. Leg Curls</div><div class="ex-note-c">Lying leg curl · isolate hamstrings strictly</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
         <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">4. Chest-Supported DB Row / Pullover</div><div class="ex-note-c">Back volume with zero lower-back fatigue</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <div><div class="ex-name-c">5. Walking Lunges</div><div class="ex-note-c">DB in hands · upright posture & knee tracking</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">12/leg</div>
         <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">5. Cable Tricep Pushdowns</div><div class="ex-note-c">Keep elbows pinned to sides</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <div><div class="ex-name-c">6. Calf Raises</div><div class="ex-note-c">Standing calf stretch with 1s pause at peak</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">15–20</div>
         <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
-      <div class="ex-row-compact">
-        <div><div class="ex-name-c">6. Dumbbell Hammer Curls</div><div class="ex-note-c">Brachialis focus for thick arm size</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
-        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
-      </div>
-      <div class="cardio-compact">🏃‍♂️ <b>Cardio:</b> 15–20m Incline Walk (4.0–4.8 km/h | 6–10% Incline)</div>
+      <div class="cardio-compact">🚶‍♂️ <b>7. Normal Walking:</b> 5 minutes (Cooldown & active recovery)</div>
     </div>
   </div>
 
-  <!-- OPTIONAL 4TH DAY ACCORDION -->
-  <div class="acc" id="acc-day-opt">
+  <!-- FRIDAY: REST & ACTIVE RECOVERY ACCORDION -->
+  <div class="acc" id="acc-day-fri">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div>
-        <div class="acc-title">🗓️ Optional Day 4 – Posture & Weak Points <span class="badge b-purple">RECOVERY</span></div>
-        <div class="acc-sub">5 movements · 1–2x/month · V-taper polish & active recovery</div>
+        <div class="acc-title">🗓️ Friday: Rest & Active Recovery <span class="badge b-purple">REST</span></div>
+        <div class="acc-sub">Mid-split recovery before weekend volume · mobility, walking & stretching</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="acc-body">
+      <div class="warmup-row"><div class="warmup-tag">30m</div><div><b>Incline/Outdoor Walk:</b> Low heart-rate walk to restore glycogen & reduce leg soreness</div></div>
+      <div class="warmup-row"><div class="warmup-tag">10m</div><div><b>Full Body Foam Rolling:</b> Glutes, quads, IT bands, lats and thoracic spine</div></div>
+      <div class="warmup-row"><div class="warmup-tag">10m</div><div><b>Static Hamstring & Hip Flexor Stretches:</b> 45s holds per muscle group</div></div>
+      <div class="cardio-compact">🧘‍♂️ <b>Goal:</b> Fuel up with quality carbohydrates, hydrate, and prepare for Saturday Push.</div>
+    </div>
+  </div>
+
+  <!-- SATURDAY: DAY 4 ACCORDION (PUSH) -->
+  <div class="acc" id="acc-day-sat">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div>
+        <div class="acc-title">🗓️ Saturday: Day 4 – Push (Chest · Shoulders · Triceps) <span class="badge b-blue">PUSH</span></div>
+        <div class="acc-sub">6 movements + cardio · ~55 min · Secondary chest & shoulder focus</div>
       </div>
       <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="acc-body">
       <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">1. Cable or DB Lateral Raises</div><div class="ex-note-c">Shoulder width emphasis</div></div>
-        <div class="ex-val-c">4</div><div class="ex-val-c">12–15</div>
-        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+        <div><div class="ex-name-c">1. Flat Bench Press</div><div class="ex-note-c">Barbell / DB · pinch scapula back & down</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">8–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(120)">2m ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">2. Face Pulls / Band Pull-Aparts</div><div class="ex-note-c">Upper back posture & rear delts</div></div>
-        <div class="ex-val-c">4</div><div class="ex-val-c">15–20</div>
-        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
-      </div>
-      <div class="ex-row-compact">
-        <div><div class="ex-name-c">3. Incline DB Bicep Curls</div><div class="ex-note-c">Bicep peak isolation</div></div>
+        <div><div class="ex-name-c">2. Incline Dumbbell Press</div><div class="ex-note-c">Bench at 30° · upper chest stretch</div></div>
         <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
-        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">4. Overhead Cable Tricep Ext</div><div class="ex-note-c">Long head tricep extension</div></div>
-        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
-        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+        <div><div class="ex-name-c">3. Overhead Shoulder Press</div><div class="ex-note-c">Barbell or DB · full vertical press</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">8–10</div>
+        <button class="rest-trigger" onclick="startRestTimer(120)">2m ⏱️</button>
       </div>
       <div class="ex-row-compact">
-        <div><div class="ex-name-c">5. Hanging Leg Raise / Pallof Press</div><div class="ex-note-c">Core bracing & anti-rotation</div></div>
+        <div><div class="ex-name-c">4. Lateral Raises</div><div class="ex-note-c">Lead with elbows for side delt width</div></div>
         <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div>
         <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
       </div>
-      <div class="cardio-compact">🧘‍♂️ <b>Finish:</b> 10m Spine Foam Rolling & Hip Stretch + 20m Incline Walk</div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">5. Tricep Pushdown</div><div class="ex-note-c">Cable rope / bar · pin elbows to sides</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">6. Overhead Tricep Ext.</div><div class="ex-note-c">Dumbbell / cable · stretch tricep long head</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+      </div>
+      <div class="cardio-compact">🏃‍♂️ <b>7. Incline Treadmill Walk:</b> 20 minutes (4.0–4.8 km/h | 6–10% Incline)</div>
     </div>
   </div>
 
-  <!-- PROGRESSION STRATEGY ACCORDION -->
-  <div class="acc">
+  <!-- SUNDAY: DAY 5 ACCORDION (PULL) -->
+  <div class="acc" id="acc-day-sun">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div>
-        <div class="acc-title">📈 Progression Strategy</div>
-        <div class="acc-sub">6-Month periodization roadmap</div>
+        <div class="acc-title">🗓️ Sunday: Day 5 – Pull (Back · Biceps · Rear Delts) <span class="badge b-green">PULL</span></div>
+        <div class="acc-sub">6 movements + cycling · ~55 min · Secondary back & arm volume</div>
       </div>
       <svg class="chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="acc-body" style="padding:12px;">
-      <div class="phase-card"><div class="phase-title" style="color:var(--accent)">Phase 1 — Months 1–2: Foundation</div><div class="phase-body">Learn movement patterns, build work capacity. <b>Double progression</b> — add weight only when top of rep range is hit for all sets 2 weeks running.</div></div>
-      <div class="phase-card"><div class="phase-title" style="color:var(--amber)">Phase 2 — Months 3–4: Accumulation</div><div class="phase-body">Add 1 set per compound. Introduce <b>weekly top sets</b> — heavy 3–5 rep set before back-off sets. Strength and size accelerate here.</div></div>
-      <div class="phase-card"><div class="phase-title" style="color:var(--coral)">Phase 3 — Months 5–6: Intensification</div><div class="phase-body"><b>Deload week every 4th week</b> (50% volume). Focus on rep PRs and full ROM. Physique consolidates. Reassess after month 6.</div></div>
+    <div class="acc-body">
+      <div class="ex-header-compact"><div>Exercise</div><div>Sets</div><div>Reps</div><div>Rest</div></div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">1. Lat Pulldown</div><div class="ex-note-c">Pull with elbows · wide V-taper lat builder</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">6–10</div>
+        <button class="rest-trigger" onclick="startRestTimer(120)">2m ⏱️</button>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">2. Seated Cable Row</div><div class="ex-note-c">Squeeze shoulder blades for mid-back thickness</div></div>
+        <div class="ex-val-c">4</div><div class="ex-val-c">8–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">3. Single-Arm Dumbbell Row</div><div class="ex-note-c">Full stretch at bottom & controlled lat pull</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(90)">90s ⏱️</button>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">4. Face Pulls</div><div class="ex-note-c">High pull to forehead for rear delts & posture</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">12–15</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">5. Barbell Curl</div><div class="ex-note-c">Strict elbow pivot for bicep mass building</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+      </div>
+      <div class="ex-row-compact">
+        <div><div class="ex-name-c">6. Hammer Curls</div><div class="ex-note-c">Neutral grip for brachialis & arm thickness</div></div>
+        <div class="ex-val-c">3</div><div class="ex-val-c">10–12</div>
+        <button class="rest-trigger" onclick="startRestTimer(60)">60s ⏱️</button>
+      </div>
+      <div class="cardio-compact">🚴 <b>7. Cycling:</b> 12–15 minutes (Moderate resistance & steady cadence)</div>
     </div>
   </div>
 </div>
@@ -926,12 +993,33 @@ function toggleAcc(h) {
   }
 }
 
+function toggleCalc(h) {
+  const sec = h.closest('.calc-section');
+  const body = sec.querySelector('.calc-body');
+  const isOpen = body.classList.contains('open');
+  if(isOpen) {
+    body.classList.remove('open');
+    h.classList.remove('open');
+  } else {
+    body.classList.add('open');
+    h.classList.add('open');
+  }
+}
+
 function autoExpandTodayWorkout() {
   const dayIdx = new Date().getDay();
-  const dayMap = { 2: 'acc-day-tue', 3: 'acc-day-wed', 4: 'acc-day-thu', 5: 'acc-day-opt' };
+  const dayMap = { 
+    0: 'acc-day-sun', 
+    1: 'acc-day-mon',
+    2: 'acc-day-tue', 
+    3: 'acc-day-wed', 
+    4: 'acc-day-thu', 
+    5: 'acc-day-fri', 
+    6: 'acc-day-sat' 
+  };
   const todayAccId = dayMap[dayIdx];
 
-  ['acc-day-tue', 'acc-day-wed', 'acc-day-thu', 'acc-day-opt'].forEach(id => {
+  ['acc-day-mon', 'acc-day-tue', 'acc-day-wed', 'acc-day-thu', 'acc-day-fri', 'acc-day-sat', 'acc-day-sun'].forEach(id => {
     const el = document.getElementById(id);
     if(el) {
       const h = el.querySelector('.acc-header');
@@ -1088,13 +1176,13 @@ function renderHomeDashboard() {
   const dayName = dayNames[now.getDay()];
   
   const routines = {
-    'Monday':    { title: 'Active Recovery & Rest', desc: 'Mobility work, 30 min walk & stretching' },
-    'Tuesday':   { title: 'Day 1 — Quad & Chest Focus', desc: 'Bench Press, Leg Press, Incline DB Press & Triceps (~55 min)' },
-    'Wednesday': { title: 'Day 2 — Back, Rear Delts & Hamstrings', desc: 'Lat Pulldowns, Deadlifts, Seated Rows & Curls (~60 min)' },
-    'Thursday':  { title: 'Day 3 — Shoulder Width & Hypertrophy', desc: 'DB Press, RDLs, Lateral Raises & Arms (~55 min)' },
-    'Friday':    { title: 'Optional Day 4 — Posture & V-Taper', desc: 'Lateral raises, Rear delts, Arms & Core (~45 min)' },
-    'Saturday':  { title: 'Full Weekend Recovery', desc: 'Rest, sleep 8h, hydrate and prep meals' },
-    'Sunday':    { title: 'Full Weekend Recovery', desc: 'Rest, sleep 8h, hydrate and prep meals' },
+    'Monday':    { title: 'Rest & Active Recovery', desc: 'Mobility work, 30 min walk, spine decompression & full recovery' },
+    'Tuesday':   { title: 'Day 1 — Push (Chest, Shoulders, Triceps)', desc: 'Flat Bench, Incline DB Press, OHP, Lateral Raises, Triceps & Incline Walk (~55 min)' },
+    'Wednesday': { title: 'Day 2 — Pull (Back, Biceps, Rear Delts)', desc: 'Lat Pulldown, Cable Row, DB Row, Face Pulls, Barbell/Hammer Curls & Cycling (~55 min)' },
+    'Thursday':  { title: 'Day 3 — Legs', desc: 'Barbell Squats, RDLs, Leg Press, Leg Curls, Lunges, Calves & Walking (~55 min)' },
+    'Friday':    { title: 'Rest & Active Recovery', desc: 'Mobility work, 30 min walk, spine decompression & full recovery' },
+    'Saturday':  { title: 'Day 4 — Push (Chest, Shoulders, Triceps)', desc: 'Flat Bench, Incline DB Press, OHP, Lateral Raises, Triceps & Incline Walk (~55 min)' },
+    'Sunday':    { title: 'Day 5 — Pull (Back, Biceps, Rear Delts)', desc: 'Lat Pulldown, Cable Row, DB Row, Face Pulls, Barbell/Hammer Curls & Cycling (~55 min)' },
   };
 
   document.getElementById('home-today-day').textContent = dayName;
@@ -1149,13 +1237,21 @@ function renderHomeDashboard() {
 }
 
 function highlightScheduleDay() {
-  const days = ['sched-sat', 'sched-mon', 'sched-tue', 'sched-wed', 'sched-thu', 'sched-fri', 'sched-sat'];
-  const dayIdx = new Date().getDay();
-  days.forEach(id => {
+  const dayMap = {
+    0: 'sched-sun',
+    1: 'sched-mon',
+    2: 'sched-tue',
+    3: 'sched-wed',
+    4: 'sched-thu',
+    5: 'sched-fri',
+    6: 'sched-sat'
+  };
+  const activeId = dayMap[new Date().getDay()];
+  ['sched-mon', 'sched-tue', 'sched-wed', 'sched-thu', 'sched-fri', 'sched-sat', 'sched-sun'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.classList.remove('today');
   });
-  const currentEl = document.getElementById(days[dayIdx]);
+  const currentEl = document.getElementById(activeId);
   if(currentEl) currentEl.classList.add('today');
 }
 
@@ -1343,9 +1439,11 @@ function renderProgress() {
 
   pc.innerHTML = html;
 
-  Object.keys(metaMap).forEach(k => {
-    drawChart(log, k, `chart-${k}`);
-  });
+  setTimeout(() => {
+    Object.keys(metaMap).forEach(k => {
+      drawChart(log, k, `chart-${k}`);
+    });
+  }, 50);
 }
 
 function drawChart(log, metric, canvasId){
@@ -1355,7 +1453,7 @@ function drawChart(log, metric, canvasId){
   const filtered=log.filter(e=>e[meta.key]);
   const ctx=canvas.getContext('2d');
   const dpr=window.devicePixelRatio||1;
-  const W=canvas.offsetWidth, H=160;
+  const W=canvas.offsetWidth || 300, H=160;
   canvas.width=W*dpr; canvas.height=H*dpr;
   ctx.scale(dpr,dpr);
 
@@ -1407,10 +1505,9 @@ function drawChart(log, metric, canvasId){
 // ── HEADER ──
 function updateHeader(){
   const e=latestEntry(),p=getProfile();
-  if(!e&&!p.age)return;
   const parts=['28M','5\'7"'];
-  if(e&&e.weight)parts[1]=e.weight+'kg';
-  if(e&&e.bf)parts.push('~'+e.bf+'% BF');
+  if(e&&e.weight) parts.push(e.weight+'kg');
+  if(e&&e.bf) parts.push('~'+e.bf+'% BF');
   document.getElementById('header-sub').textContent=parts.join(' · ')+' · Lean Bulk · Eggetarian';
 }
 
